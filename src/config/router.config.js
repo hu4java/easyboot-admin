@@ -254,6 +254,21 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+      {
+        path: '/sys',
+        name: 'System',
+        component: RouteView,
+        redirect: '/sys/menu',
+        meta: { title: '系统管理', icon: 'warning', permission: [ 'exception' ] },
+        children: [
+          {
+            path: '/sys/menu',
+            name: 'Menu',
+            component: () => import('@/views/sys/menu'),
+            meta: { title: '菜单管理', permission: [ 'user' ] }
+          }
+        ]
       }
 
       // other
