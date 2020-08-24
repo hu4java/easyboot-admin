@@ -30,12 +30,6 @@ export const asyncRouterMap = [
             component: () => import('@/views/dashboard/Analysis'),
             meta: { title: 'menu.dashboard.analysis', keepAlive: false, permission: [ 'dashboard' ] }
           },
-          // 外部链接
-          {
-            path: 'https://www.baidu.com/',
-            name: 'Monitor',
-            meta: { title: 'menu.dashboard.monitor', target: '_blank' }
-          },
           {
             path: '/dashboard/workplace',
             name: 'Workplace',
@@ -337,37 +331,20 @@ export const asyncRouterMap = [
  */
 export const constantRouterMap = [
   {
-    path: '/user',
+    path: '/login',
     component: UserLayout,
-    redirect: '/user/login',
     hidden: true,
     children: [
       {
-        path: 'login',
+        path: '/login',
         name: 'login',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
-      },
-      {
-        path: 'register',
-        name: 'register',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
-      },
-      {
-        path: 'register-result',
-        name: 'registerResult',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/RegisterResult')
-      },
-      {
-        path: 'recover',
-        name: 'recover',
-        component: undefined
+        component: () => import('@/views/login/index')
       }
     ]
   },
-
   {
     path: '/404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+    component: () => import('@/views/exception/404')
   }
 
 ]

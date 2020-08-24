@@ -12,7 +12,8 @@ import {
   TOGGLE_WEAK,
   TOGGLE_MULTI_TAB,
   // i18n
-  APP_LANGUAGE
+  APP_LANGUAGE,
+  SHOW_SETTINGS
 } from '@/store/mutation-types'
 import { loadLanguageAsync } from '@/locales'
 
@@ -80,6 +81,10 @@ const app = {
     [TOGGLE_MULTI_TAB]: (state, bool) => {
       storage.set(TOGGLE_MULTI_TAB, bool)
       state.multiTab = bool
+    },
+    [SHOW_SETTINGS]: (state, bool) => {
+      state.showSettings = bool
+      storage.set(SHOW_SETTINGS, bool)
     }
   },
   actions: {

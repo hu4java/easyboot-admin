@@ -5,11 +5,10 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">Ant Design</span>
+            <span class="title">HuBoot Admin</span>
           </a>
         </div>
         <div class="desc">
-          Ant Design 是西湖区最具影响力的 Web 设计规范
         </div>
       </div>
 
@@ -22,7 +21,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; 2018 vueComponent
+          Copyright &copy; {{ year }} HuBoot Admin
         </div>
       </div>
     </div>
@@ -35,6 +34,11 @@ import { deviceMixin } from '@/store/device-mixin'
 export default {
   name: 'UserLayout',
   mixins: [deviceMixin],
+  data () {
+    return {
+      year: new Date().getFullYear()
+    }
+  },
   mounted () {
     document.body.classList.add('userLayout')
   },

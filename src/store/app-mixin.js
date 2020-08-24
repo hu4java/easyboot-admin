@@ -11,6 +11,7 @@ const baseMixin = {
       fixedSidebar: state => state.app.fixedSidebar,
       contentWidth: state => state.app.contentWidth,
       autoHideHeader: state => state.app.autoHideHeader,
+      showSettings: state => state.app.showSettings,
 
       isMobile: state => state.app.isMobile,
       sideCollapsed: state => state.app.sideCollapsed,

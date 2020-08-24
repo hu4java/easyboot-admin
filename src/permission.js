@@ -10,8 +10,8 @@ import { i18nRender } from '@/locales'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['login', 'register', 'registerResult'] // no redirect whitelist
-const loginRoutePath = '/user/login'
+const whiteList = ['login'] // no redirect whitelist
+const loginRoutePath = '/login'
 const defaultRoutePath = '/dashboard/workplace'
 
 router.beforeEach((to, from, next) => {
@@ -29,7 +29,8 @@ router.beforeEach((to, from, next) => {
         store
           .dispatch('GetInfo')
           .then(res => {
-            const roles = res.result && res.result.role
+            console.log('==========>', res)
+            const roles = res.data && res.data.roles
             // generate dynamic router
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               // 根据roles权限生成可访问的路由表

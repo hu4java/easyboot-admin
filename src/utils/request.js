@@ -2,6 +2,7 @@ import axios from 'axios'
 import store from '@/store'
 import storage from 'store'
 import notification from 'ant-design-vue/es/notification'
+import { message } from 'ant-design-vue'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
@@ -47,14 +48,27 @@ request.interceptors.request.use(config => {
   // 如果 token 存在
   // 让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
-    config.headers['Access-Token'] = token
+    config.headers['Authorization'] = token
   }
   return config
 }, errorHandler)
 
 // response interceptor
 request.interceptors.response.use((response) => {
-  return response.data
+  const data = response.data
+  if (!data.success) {
+    if (data.code === 1000) {
+      store.dispatch('Logout').then(() => {
+        setTimeout(() => {
+          window.location.reload()
+        }, 1500)
+      })
+    } else {
+      message.error(data.message)
+    }
+  }
+
+  return data
 }, errorHandler)
 
 const installer = {
