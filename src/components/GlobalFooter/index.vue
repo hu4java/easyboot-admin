@@ -6,7 +6,7 @@
       <a href="https://www.github.com/sendya/" target="_blank">@Sendya</a> -->
     </template>
     <template v-slot:copyright>
-      <a href="javascript:;">HuBoot Admin</a>
+      <a href="javascript:;">EasyBoot Admin</a>
     </template>
   </global-footer>
 </template>

@@ -8,9 +8,9 @@
 export default {
   name: 'Menu',
   data () {
-      return {
-          list: []
-      }
+    return {
+      list: []
+    }
   }
 }
 </script>

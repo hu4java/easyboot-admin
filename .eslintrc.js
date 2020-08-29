@@ -56,7 +56,12 @@ module.exports = {
       }
     ],
     'template-curly-spacing': 'off',
-    'indent': 'off'
+    'indent': 'off',
+    'vue/script-indent': ['error', 2, { // script标签缩进设置
+      'baseIndent': 0,
+      'switchCase': 0,
+      'ignores': []
+    }]
   },
   parserOptions: {
     parser: 'babel-eslint'

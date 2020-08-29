@@ -269,6 +269,27 @@ export const asyncRouterMap = [
             meta: { title: '菜单管理', permission: [ 'user' ] }
           }
         ]
+      },
+      {
+        path: '/sys/tools',
+        name: 'SystemTools',
+        component: RouteView,
+        redirect: '/sys/tools/generate',
+        meta: { title: '系统工具', icon: 'warning', permission: [ 'exception' ] },
+        children: [
+          {
+            path: '/sys/tools/generate',
+            name: 'Generate',
+            component: () => import('@/views/generate/list'),
+            meta: { title: '代码生成', permission: [ 'user' ] }
+          },
+          {
+            path: '/sys/tools/generate/code',
+            name: 'GenerateCode',
+            component: () => import('@/views/generate/code'),
+            meta: { title: '生成代码', permission: [ 'user' ] }
+          }
+        ]
       }
 
       // other

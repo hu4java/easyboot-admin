@@ -476,26 +476,26 @@ export default {
       tableLoading: false,
       columns,
       data: [{
-        key: '1',
-        name: '小明',
-        workId: '001',
-        editable: false,
-        department: '行政部'
-      },
-        {
-          key: '2',
-          name: '李莉',
-          workId: '002',
-          editable: false,
-          department: 'IT部'
-        },
-        {
-          key: '3',
-          name: '王小帅',
-          workId: '003',
-          editable: false,
-          department: '财务部'
-        }]
+               key: '1',
+               name: '小明',
+               workId: '001',
+               editable: false,
+               department: '行政部'
+             },
+             {
+               key: '2',
+               name: '李莉',
+               workId: '002',
+               editable: false,
+               department: 'IT部'
+             },
+             {
+               key: '3',
+               name: '王小帅',
+               workId: '003',
+               editable: false,
+               department: '财务部'
+             }]
     }
   },
   mounted () {

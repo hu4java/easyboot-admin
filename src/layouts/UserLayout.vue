@@ -5,7 +5,7 @@
         <div class="header">
           <a href="/">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">HuBoot Admin</span>
+            <span class="title">EasyBoot Admin</span>
           </a>
         </div>
         <div class="desc">

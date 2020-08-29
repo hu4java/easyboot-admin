@@ -24,7 +24,7 @@ export default {
   menu: {
     locale: false
   },
-  title: 'HuBoot Admin',
+  title: 'EasyBoot Admin',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'
