@@ -1,96 +1,155 @@
 <template>
-  <page-header-wrapper>
+  <page-header-wrapper :title="table.tableComment ? table.tableComment : table.tableName">
+    <template v-slot:content>
+      <a-descriptions size="small" :column="2">
+        <a-descriptions-item label="表名称">{{ table.tableName }}</a-descriptions-item>
+        <a-descriptions-item label="创建时间">{{ table.createTime }}</a-descriptions-item>
+        <a-descriptions-item label="字符集">{{ table.tableCollation }}</a-descriptions-item>
+        <a-descriptions-item />
+        <a-descriptions-item label="描述">{{ table.tableComment }}</a-descriptions-item>
+      </a-descriptions>
+    </template>
     <a-card :bordered="false">
-      <div class="table-page-search-wrapper">
-        <a-form>
-          <a-row>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="表名">
-                <a-input placeholder=""/>
-              </a-form-item>
-            </a-col>
+      <template slot="title">
+        <a-button type="primary" @click="generate">生成代码</a-button>
+      </template>
+      <a-tabs default-active-key="config">
+        <a-tab-pane key="config" tab="配置信息">
+          <a-form :form="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 12 }">
+            <a-row>
+              <a-col :span="12">
+                <a-form-item label="作者">
+                  <a-input
+                    v-decorator="['author', { initialValue: 'EasyBoot', rules: [{ required: true, message: '请填写作者' }] }]"
+                    placeholder="请填写作者"
+                  />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-item label="实体类名称">
+                  <a-input
+                    v-decorator="['entityName', { initialValue: table.entityName, rules: [{ required: true, message: '请填写实体类名称' }] }]"
+                    placeholder="请填写实体类名称"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label="注释">
+                  <a-input
+                    v-decorator="[
+                      'comment',
+                      { initialValue: table.tableComment, rules: [{ required: true, message: '请填写注释' }] },
+                    ]"
+                    placeholder="请填写注释"
+                  />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-item label="模块名称">
+                  <a-input
+                    v-decorator="['module', { rules: [{ required: true, message: '请填写模块名称' }] }]"
+                    placeholder="请填写模块名称"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-item label="包路径">
+                  <a-input
+                    v-decorator="[
+                      'javaPackage',
+                      { rules: [{ required: true, message: '请填写包路径' }] },
+                    ]"
+                    placeholder="请填写包路径"
+                  />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </a-tab-pane>
+        <a-tab-pane key="field" tab="字段信息">
+          <a-table
+            ref="table"
+            row-key="columnName"
+            size="small"
+            :data-source="columnList"
+            :pagination="false"
+          >
 
-            <a-col :md="8" :sm="24">
-              <span class="table-page-search-submitButtons" style="float: right, overflow: hidden">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-              </span>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
+            <a-table-column key="index" title="序号" :width="100">
+              <template slot-scope="text, record, index">
+                {{ index + 1 }}
+              </template>
+            </a-table-column>
+            <a-table-column key="columnName" title="列名" data-index="columnName" :width="250"/>
+            <a-table-column key="dataType" title="数据类型" data-index="dataType" :width="200"/>
+            <a-table-column key="fieldName" title="字段名" data-index="fieldName" :width="200">
+              <template slot-scope="text, record">
+                <a-input v-model="record.fieldName"/>
+              </template>
+            </a-table-column>
+            <a-table-column key="javaType" title="java类型" data-index="javaType" :width="200">
+              <template slot-scope="text, record">
+                <a-select v-model="record.javaType" style="width:100%" default-value="String">
+                  <a-select-option value="String">
+                    String
+                  </a-select-option>
+                  <a-select-option value="Long">
+                    Long
+                  </a-select-option>
+                  <a-select-option value="Integer">
+                    Integer
+                  </a-select-option>
+                  <a-select-option value="BigDecimal">
+                    BigDecimal
+                  </a-select-option>
+                  <a-select-option value="Float">
+                    Float
+                  </a-select-option>
+                  <a-select-option value="Double">
+                    Double
+                  </a-select-option>
+                  <a-select-option value="Boolean">
+                    Boolean
+                  </a-select-option>
+                  <a-select-option value="LocalTime">
+                    LocalTime
+                  </a-select-option>
+                  <a-select-option value="LocalDate">
+                    LocalDate
+                  </a-select-option>
+                  <a-select-option value="LocalDateTime">
+                    LocalDateTime
+                  </a-select-option>
+                </a-select>
+              </template>
+            </a-table-column>
+            <a-table-column key="columnComment" title="注释" data-index="columnComment">
+              <template slot-scope="text, record">
+                <a-input v-model="record.columnComment"/>
+              </template>
+            </a-table-column>
+          </a-table>
+        </a-tab-pane>
 
-      <a-table
-        ref="table"
-        row-key="name"
-        :data-source="table.columnList"
-        :pagination="false"
-      >
-
-        <a-table-column key="index" title="序号">
-          <template slot-scope="text, record, index">
-            {{ index + 1 }}
-          </template>
-        </a-table-column>
-        <a-table-column key="name" title="列名" data-index="name" />
-        <a-table-column key="type" title="数据类型" data-index="type" />
-        <a-table-column key="fieldName" title="字段名" data-index="fieldName" :width="200">
-          <template slot-scope="text, record">
-            <a-input v-model="record.fieldName"/>
-          </template>
-        </a-table-column>
-        <a-table-column key="javaType" title="java类型" data-index="javaType">
-          <template slot-scope="text, record">
-            <a-select v-model="record.javaType" style="width:150px" default-value="String">
-              <a-select-option value="String">
-                String
-              </a-select-option>
-              <a-select-option value="Long">
-                Long
-              </a-select-option>
-              <a-select-option value="Integer">
-                Integer
-              </a-select-option>
-              <a-select-option value="BigDecimal">
-                BigDecimal
-              </a-select-option>
-              <a-select-option value="Float">
-                Float
-              </a-select-option>
-              <a-select-option value="Double">
-                Double
-              </a-select-option>
-              <a-select-option value="Boolean">
-                Boolean
-              </a-select-option>
-              <a-select-option value="LocalTime">
-                LocalTime
-              </a-select-option>
-              <a-select-option value="LocalDate">
-                LocalDate
-              </a-select-option>
-              <a-select-option value="LocalDateTime">
-                LocalDateTime
-              </a-select-option>
-            </a-select>
-          </template>
-        </a-table-column>
-        <a-table-column key="comment" title="注释" data-index="comment">
-          <template slot-scope="text, record">
-            <a-input v-model="record.comment"/>
-          </template>
-        </a-table-column>
-      </a-table>
+      </a-tabs>
     </a-card>
   </page-header-wrapper>
 </template>
 
 <script>
 import * as TableApi from '@/api/generate/table'
+import * as GenerateApi from '@/api/generate/generate'
 export default {
   name: 'GenerateCode',
   data () {
     return {
-      table: {}
+      table: {},
+      columnList: [],
+      form: this.$form.createForm(this)
     }
   },
   async created () {
@@ -101,11 +160,33 @@ export default {
     const resp = await TableApi.getInfo(tableName)
     if (resp.success) {
       this.table = resp.data
+      this.columnList = resp.data.columnList ?? []
     }
   },
   methods: {
-    generate (record) {
-      this.$router.push()
+    generate () {
+      const self = this
+      self.form.validateFields(async (error, values) => {
+        if (error) {
+          return
+        }
+        const data = { ...values, tableName: self.table.tableName, fieldList: self.columnList }
+        const resp = await GenerateApi.generateCode(data)
+        const blob = new Blob([resp])
+        const fileName = values.module + '.zip'
+        if ('download' in document.createElement('a')) { // 非IE下载
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        } else { // IE10+下载
+          navigator.msSaveBlob(blob, fileName)
+        }
+      })
     }
   }
 }

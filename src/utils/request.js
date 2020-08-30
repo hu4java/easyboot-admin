@@ -56,6 +56,11 @@ request.interceptors.request.use(config => {
 // response interceptor
 request.interceptors.response.use((response) => {
   const data = response.data
+
+  if (data instanceof Blob) {
+    return data
+  }
+
   if (!data.success) {
     if (data.code === 1000) {
       store.dispatch('Logout').then(() => {

@@ -30,13 +30,13 @@
             {{ index + 1 }}
           </template>
         </a-table-column>
-        <a-table-column key="name" title="表名" data-index="name" />
-        <a-table-column key="comment" title="描述" data-index="comment" />
-        <a-table-column key="collation" title="字符集" data-index="collation" />
+        <a-table-column key="tableName" title="表名称" data-index="tableName" />
+        <a-table-column key="tableComment" title="描述" data-index="tableComment" />
+        <a-table-column key="tableCollation" title="字符集" data-index="tableCollation" />
         <a-table-column key="createTime" title="创建时间" data-index="createTime" />
         <a-table-column key="action" title="操作" fiexd="right">
           <template slot-scope="text, record">
-            <a @click="generate(record)">生成代码</a>
+            <a @click="config(record)">配置</a>
           </template>
         </a-table-column>
       </s-table>
@@ -63,8 +63,8 @@ export default {
     }
   },
   methods: {
-    generate (record) {
-      this.$router.push({ name: 'GenerateCode', query: { tableName: record.name } })
+    config (record) {
+      this.$router.push({ name: 'GenerateCode', query: { tableName: record.tableName } })
     }
   }
 }
