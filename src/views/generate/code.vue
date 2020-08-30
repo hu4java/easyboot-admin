@@ -93,37 +93,17 @@
             </a-table-column>
             <a-table-column key="javaType" title="java类型" data-index="javaType" :width="200">
               <template slot-scope="text, record">
-                <a-select v-model="record.javaType" style="width:100%" default-value="String">
-                  <a-select-option value="String">
-                    String
-                  </a-select-option>
-                  <a-select-option value="Long">
-                    Long
-                  </a-select-option>
-                  <a-select-option value="Integer">
-                    Integer
-                  </a-select-option>
-                  <a-select-option value="BigDecimal">
-                    BigDecimal
-                  </a-select-option>
-                  <a-select-option value="Float">
-                    Float
-                  </a-select-option>
-                  <a-select-option value="Double">
-                    Double
-                  </a-select-option>
-                  <a-select-option value="Boolean">
-                    Boolean
-                  </a-select-option>
-                  <a-select-option value="LocalTime">
-                    LocalTime
-                  </a-select-option>
-                  <a-select-option value="LocalDate">
-                    LocalDate
-                  </a-select-option>
-                  <a-select-option value="LocalDateTime">
-                    LocalDateTime
-                  </a-select-option>
+                <a-select v-model="record.javaType" style="width:100%">
+                  <a-select-option value="String"> String</a-select-option>
+                  <a-select-option value="Long">Long</a-select-option>
+                  <a-select-option value="Integer">Integer</a-select-option>
+                  <a-select-option value="BigDecimal">BigDecimal</a-select-option>
+                  <a-select-option value="Float">Float</a-select-option>
+                  <a-select-option value="Double">Double</a-select-option>
+                  <a-select-option value="Boolean">Boolean</a-select-option>
+                  <a-select-option value="LocalTime">LocalTime</a-select-option>
+                  <a-select-option value="LocalDate">LocalDate</a-select-option>
+                  <a-select-option value="LocalDateTime">LocalDateTime</a-select-option>
                 </a-select>
               </template>
             </a-table-column>
