@@ -21,7 +21,7 @@
 
       <s-table
         ref="table"
-        row-key="name"
+        row-key="tableName"
         :data="loadData"
       >
 

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'Menu',
+  name: 'MenuList',
   data () {
     return {
       list: []

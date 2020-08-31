@@ -265,9 +265,35 @@ export const asyncRouterMap = [
           {
             path: '/sys/menu',
             name: 'Menu',
-            component: () => import('@/views/sys/menu'),
-            meta: { title: '菜单管理', permission: [ 'user' ] }
+            component: RouteView,
+            redirect: '/sys/menu/list',
+            meta: { title: '菜单管理', permission: [ 'user' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/sys/menu/list',
+                name: 'MenuList',
+                component: () => import('@/views/sys/menu/menu-list'),
+                hidden: true,
+                meta: { title: '菜单列表', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/menu/add',
+                name: 'MenuAdd',
+                component: () => import('@/views/sys/menu/menu-form'),
+                hidden: true,
+                meta: { title: '新建菜单', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/menu/edit/:id',
+                name: 'MenuEdit',
+                component: () => import('@/views/sys/menu/menu-form'),
+                hidden: true,
+                meta: { title: '编辑菜单', permission: [ 'user' ] }
+              }
+            ]
           }
+
         ]
       },
       {
@@ -280,14 +306,26 @@ export const asyncRouterMap = [
           {
             path: '/sys/tools/generate',
             name: 'Generate',
-            component: () => import('@/views/generate/list'),
-            meta: { title: '代码生成', permission: [ 'user' ] }
-          },
-          {
-            path: '/sys/tools/generate/code',
-            name: 'GenerateCode',
-            component: () => import('@/views/generate/code'),
-            meta: { title: '生成代码', permission: [ 'user' ] }
+            component: RouteView,
+            meta: { title: '代码生成', permission: [ 'user' ] },
+            hideChildrenInMenu: true,
+            redirect: '/sys/tools/generate/list',
+            children: [
+              {
+                path: '/sys/tools/generate/list',
+                name: 'GenerateList',
+                component: () => import('@/views/generate/list'),
+                hidden: true,
+                meta: { title: '数据库表', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/tools/generate/code',
+                name: 'GenerateCode',
+                hidden: true,
+                component: () => import('@/views/generate/code'),
+                meta: { title: '生成代码', permission: [ 'user' ] }
+              }
+            ]
           }
         ]
       }
