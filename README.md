@@ -1,2 +1,2 @@
-# huboot-admin
+# EasyBoot-Admin
 

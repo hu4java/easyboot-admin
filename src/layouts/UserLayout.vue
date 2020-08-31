@@ -21,7 +21,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; {{ year }} HuBoot Admin
+          Copyright &copy; {{ year }} EasyBoot Admin
         </div>
       </div>
     </div>

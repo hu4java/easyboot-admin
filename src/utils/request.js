@@ -55,12 +55,12 @@ request.interceptors.request.use(config => {
 
 // response interceptor
 request.interceptors.response.use((response) => {
-  const data = response.data
-
-  if (data instanceof Blob) {
-    return data
+  const contentType = response.headers['content-type']
+  if (contentType.indexOf('application/octet-stream') !== -1) {
+    return response
   }
 
+  const data = response.data
   if (!data.success) {
     if (data.code === 1000) {
       store.dispatch('Logout').then(() => {
