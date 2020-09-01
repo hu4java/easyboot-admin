@@ -1,129 +1,86 @@
 <template>
   <page-header-wrapper>
     <a-card :bordered="false">
-      <div class="table-page-search-wrapper">
-        <a-form layout="inline">
-          <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="规则编号">
-                <a-input v-model="queryParam.id" placeholder=""/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="调用次数">
-                  <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="更新日期">
-                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-            </template>
-            <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                <a @click="toggleAdvanced" style="margin-left: 8px">
-                  {{ advanced ? '收起' : '展开' }}
-                  <a-icon :type="advanced ? 'up' : 'down'"/>
-                </a>
-              </span>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
+        <a-button type="primary" icon="plus" @click="add(0)">新建</a-button>
+        <a-button icon="sync" @click="getList">刷新</a-button>
       </div>
 
-      <s-table
+      <a-table
         ref="table"
-        size="default"
-        rowKey="key"
-        :columns="columns"
-        :data="loadData"
-        :alert="true"
-        :rowSelection="rowSelection"
-        showPagination="auto"
+        row-key="id"
+        :data-source="list"
+        :loading="loading"
+        :scroll="{ x: 1500, y: 300 }"
       >
-        <span slot="serial" slot-scope="text, record, index">
-          {{ index + 1 }}
-        </span>
-        <span slot="status" slot-scope="text">
-          <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
-        </span>
-        <span slot="description" slot-scope="text">
-          <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
-        </span>
-
-        <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="handleEdit(record)">配置</a>
-            <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+        <a-table-column key="title" title="标题" data-index="title" fixed="left" />
+        <a-table-column key="code" title="授权码" data-index="code" :width="150"/>
+        <a-table-column key="type" title="类型" data-index="type" align="center" :width="100">
+          <template slot-scope="type">
+            <a-tag color="#108ee9" v-if="type === 1">目录</a-tag>
+            <a-tag color="#2db7f5" v-if="type === 2">菜单</a-tag>
+            <a-tag color="#87d068" v-if="type === 3">按钮</a-tag>
           </template>
-        </span>
-      </s-table>
-
-      <create-form
-        ref="createModal"
-        :visible="visible"
-        :loading="confirmLoading"
-        :model="mdl"
-        @cancel="handleCancel"
-        @ok="handleOk"
-      />
-      <step-by-step-modal ref="modal" @ok="handleOk"/>
+        </a-table-column>
+        <a-table-column key="status" title="状态" data-index="status" :width="100" align="center">
+          <template slot-scope="status">
+            <a-tag color="#87d068" v-if="status === 0">正常</a-tag>
+            <a-tag color="#f50" v-else>禁用</a-tag>
+          </template>
+        </a-table-column>
+        <a-table-column key="hidden" title="显示/隐藏" data-index="hidden" :width="100" align="center">
+          <template slot-scope="hidden">
+            <a-tag color="#87d068" v-if="hidden === 0">显示</a-tag>
+            <a-tag color="#f50" v-else>隐藏</a-tag>
+          </template>
+        </a-table-column>
+        <a-table-column key="path" title="路由地址" data-index="path" />
+        <a-table-column key="action" title="操作" fixed="right" >
+          <template slot-scope="text, record">
+            <a @click="add(record.id)">新建</a>
+            <a-divider type="vertical" />
+            <a @click="edit(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a @click="dev(record)">删除</a>
+          </template>
+        </a-table-column>
+      </a-table>
     </a-card>
   </page-header-wrapper>
 </template>
 
 <script>
+import * as MenuApi from '@/api/system/menu'
+
 export default {
   name: 'MenuList',
   data () {
     return {
+      loading: false,
       list: []
+    }
+  },
+  created () {
+    this.getList()
+  },
+  methods: {
+    async getList () {
+      this.loading = true
+      const resp = await MenuApi.getList()
+      if (resp.success) {
+        this.list = resp.data
+      }
+      this.loading = false
+    },
+    add (pid) {
+      this.$router.push({ name: 'MenuAdd', query: { pid: pid } })
+    },
+    edit (record) {
+      this.$router.push({ name: 'MenuEdit', query: { id: record.id } })
+    },
+    del (record) {
+
     }
   }
 }

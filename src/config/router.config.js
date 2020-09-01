@@ -285,7 +285,7 @@ export const asyncRouterMap = [
                 meta: { title: '新建菜单', permission: [ 'user' ] }
               },
               {
-                path: '/sys/menu/edit/:id',
+                path: '/sys/menu/edit',
                 name: 'MenuEdit',
                 component: () => import('@/views/sys/menu/menu-form'),
                 hidden: true,
