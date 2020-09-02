@@ -14,7 +14,7 @@ export function getList (params) {
     return request.get(api.list, { params })
 }
 
-export function getMenu (id) {
+export function getMenuById (id) {
     return request.get(api.getById, { params: { id: id } })
 }
 

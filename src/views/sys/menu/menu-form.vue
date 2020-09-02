@@ -65,8 +65,8 @@
 
         <a-row v-if="form.type !== 3">
           <a-col :span="12">
-            <a-form-model-item label="路由名" prop="routeName" extra="请使用英文字母填写">
-              <a-input v-model="form.routeName"/>
+            <a-form-model-item label="路由名" prop="routerName" extra="请使用英文字母填写">
+              <a-input v-model="form.routerName"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -87,8 +87,8 @@
 
         <a-row>
           <a-col :span="12">
-            <a-form-model-item label="显示" prop="hidden">
-              <a-radio-group v-model="form.hidden" :default-value="0">
+            <a-form-model-item label="是否隐藏" prop="hidden">
+              <a-radio-group v-model="form.hidden" :default-value="false">
                 <a-radio :value="true">是</a-radio>
                 <a-radio :value="false">否</a-radio>
               </a-radio-group>
@@ -117,7 +117,8 @@
           </a-col>
         </a-row>
         <a-form-model-item :wrapper-col="{ span: 12, offset: 9 }">
-          <a-button type="primary" @click="submitForm" :loading="submitLoading">提交</a-button>
+          <a-button type="primary" v-if="isEdit" @click="submitForm" :loading="submitLoading">{{ submitLoading ? '更新中':'更新' }}</a-button>
+          <a-button type="primary" v-else @click="submitForm" :loading="submitLoading">{{ submitLoading ? '提交中':'提交' }}</a-button>
           <a-button style="margin-left: 10px;" @click="cancel">取消</a-button>
         </a-form-model-item>
       </a-form-model>
@@ -133,14 +134,15 @@ export default {
   name: 'MenuForm',
   data () {
     return {
+      isEdit: false,
       submitLoading: false,
       form: {
         id: '',
         title: '',
-        routeName: '',
+        routerName: '',
         pid: 0,
         type: 1,
-        hidden: 0,
+        hidden: false,
         icon: '',
         code: '',
         path: '',
@@ -154,22 +156,22 @@ export default {
       routers,
       rules: {
         title: [
-          { required: true, message: '请输入菜单标题' }
+          { required: true, message: '请填写菜单标题' }
         ],
         path: [
-          { required: true, message: '请输入路由地址' }
+          { required: true, message: '请填写路由地址' }
         ],
         permission: [
-          { required: true, message: '请输入权限标识' }
+          { required: true, message: '请填写权限标识' }
         ],
-        name: [
-          { required: true, message: '请输入路由名称' }
+        routerName: [
+          { required: true, message: '请填写路由名称' }
         ],
         component: [
-          { required: true, message: '请输入视图组件' }
+          { required: true, message: '请填写视图组件' }
         ],
         orderNum: [
-          { required: true, message: '请输入排序' }
+          { required: true, message: '请填写排序' }
         ]
       }
     }
@@ -186,9 +188,10 @@ export default {
     }
     const id = this.$route.query.id
     if (id) {
-      const itemResp = await MenuApi.getMenu(id)
-      if (itemResp.success) {
-        this.form = itemResp.data
+      this.isEdit = true
+      const menuData = await MenuApi.getMenuById(id)
+      if (menuData.success) {
+        this.form = menuData.data
       }
     }
   },
@@ -200,7 +203,7 @@ export default {
           return
         }
         self.submitLoading = true
-        if (self.form.id) {
+        if (self.isEdit) {
           self.update()
         } else {
           self.save()
@@ -212,14 +215,12 @@ export default {
       const resp = await MenuApi.save(this.form)
       if (resp.success) {
         self.$message.success('保存成功')
-        self.$refs.form.resetFields()
-
         self.$confirm({
           title: '提示',
           content: '保存成功',
-          okText: '返回上一页',
+          okText: '继续新增',
           okType: 'primary',
-          cancelText: '继续新增',
+          cancelText: '返回上一页',
           centered: true,
           onOk () {
             self.$refs.form.resetFields()
@@ -229,12 +230,13 @@ export default {
           }
         })
       }
+      self.submitLoading = false
     },
     async update () {
       const self = this
       const resp = await MenuApi.update(this.form)
       if (resp.success) {
-        self.$message.success('保存成功')
+        self.$message.success('更新成功')
       }
       setTimeout(function () {
         self.submitLoading = false
