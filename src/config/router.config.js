@@ -259,9 +259,39 @@ export const asyncRouterMap = [
         path: '/sys',
         name: 'System',
         component: RouteView,
-        redirect: '/sys/menu',
         meta: { title: '系统管理', icon: 'warning', permission: [ 'exception' ] },
         children: [
+          {
+            path: '/sys/role',
+            name: 'Role',
+            component: RouteView,
+            redirect: '/sys/role/list',
+            meta: { title: '角色管理', permission: [ 'user' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/sys/role/list',
+                name: 'RoleList',
+                component: () => import('@/views/sys/role/role-list'),
+                hidden: true,
+                meta: { title: '角色列表', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/role/add',
+                name: 'RoleAdd',
+                component: () => import('@/views/sys/role/role-form'),
+                hidden: true,
+                meta: { title: '新建角色', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/role/edit',
+                name: 'RoleEdit',
+                component: () => import('@/views/sys/role/role-form'),
+                hidden: true,
+                meta: { title: '编辑角色', permission: [ 'user' ] }
+              }
+            ]
+          },
           {
             path: '/sys/menu',
             name: 'Menu',

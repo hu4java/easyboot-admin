@@ -13,7 +13,7 @@
         size="small"
         :data-source="list"
         :loading="loading"
-        :scroll="{ x: 1500, y: 300 }"
+        :scroll="{ x: 1500 }"
         :pagination="false"
       >
         <a-table-column key="title" title="标题" data-index="title" :width="220" fixed="left" />
@@ -42,8 +42,8 @@
         <a-table-column key="path" title="路由地址" data-index="path" />
         <a-table-column key="action" title="操作" :width="180" fixed="right" >
           <template slot-scope="text, record">
-            <a @click="add(record.id)">新建</a>
-            <a-divider type="vertical" />
+            <a v-if="record.type !== 3" @click="add(record.id)">新建</a>
+            <a-divider v-if="record.type !== 3" type="vertical" />
             <a @click="edit(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="del(record)">删除</a>

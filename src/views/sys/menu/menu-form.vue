@@ -181,11 +181,7 @@ export default {
     if (pid) {
       this.form.pid = pid
     }
-    const resp = await MenuApi.getList()
-    if (resp.success) {
-      this.menuList = resp.data
-      this.menuList.unshift({ id: '0', title: '无', pid: '0', value: '0' })
-    }
+    this.getMenuList()
     const id = this.$route.query.id
     if (id) {
       this.isEdit = true
@@ -196,6 +192,13 @@ export default {
     }
   },
   methods: {
+    async getMenuList () {
+      const resp = await MenuApi.getList()
+      if (resp.success) {
+        this.menuList = resp.data
+        this.menuList.unshift({ id: '0', title: '无', pid: '0', value: '0' })
+      }
+    },
     submitForm () {
       const self = this
       self.$refs.form.validate(async (valid) => {
@@ -224,6 +227,7 @@ export default {
           centered: true,
           onOk () {
             self.$refs.form.resetFields()
+            self.getMenuList()
           },
           onCancel () {
             self.cancel()

@@ -46,7 +46,8 @@ import {
   message,
   notification,
   FormModel,
-  TreeSelect
+  TreeSelect,
+  Tree
 } from 'ant-design-vue'
 import Viser from 'viser-vue'
 
@@ -101,6 +102,7 @@ Vue.use(Statistic)
 Vue.use(Descriptions)
 Vue.use(FormModel)
 Vue.use(TreeSelect)
+Vue.use(Tree)
 
 Vue.prototype.$confirm = Modal.confirm
 Vue.prototype.$message = message
