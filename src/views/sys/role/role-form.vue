@@ -48,6 +48,7 @@
 
 <script>
 import * as MenuApi from '@/api/system/menu'
+import * as RoleApi from '@/api/system/role'
 
 export default {
   name: 'MenuForm',
@@ -95,7 +96,6 @@ export default {
       const resp = await MenuApi.getList()
       if (resp.success) {
         this.menuList = resp.data
-        this.menuList.unshift({ id: '0', title: '无', pid: '0', value: '0' })
       }
     },
     submitForm () {
@@ -114,7 +114,7 @@ export default {
     },
     async save () {
       const self = this
-      const resp = await MenuApi.save(this.form)
+      const resp = await RoleApi.save(this.form)
       if (resp.success) {
         self.$message.success('保存成功')
         self.$confirm({
@@ -137,7 +137,7 @@ export default {
     },
     async update () {
       const self = this
-      const resp = await MenuApi.update(this.form)
+      const resp = await RoleApi.update(this.form)
       if (resp.success) {
         self.$message.success('更新成功')
       }
