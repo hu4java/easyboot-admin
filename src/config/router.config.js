@@ -293,6 +293,37 @@ export const asyncRouterMap = [
             ]
           },
           {
+            path: '/sys/user',
+            name: 'User',
+            component: RouteView,
+            redirect: '/sys/user/list',
+            meta: { title: '用户管理', permission: [ 'user' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/sys/user/list',
+                name: 'UserList',
+                component: () => import('@/views/sys/user/user-list'),
+                hidden: true,
+                meta: { title: '用户列表', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/user/add',
+                name: 'UserAdd',
+                component: () => import('@/views/sys/user/user-form'),
+                hidden: true,
+                meta: { title: '新建用户', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/user/edit',
+                name: 'UserEdit',
+                component: () => import('@/views/sys/user/user-form'),
+                hidden: true,
+                meta: { title: '编辑用户', permission: [ 'user' ] }
+              }
+            ]
+          },
+          {
             path: '/sys/role',
             name: 'Role',
             component: RouteView,

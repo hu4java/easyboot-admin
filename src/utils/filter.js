@@ -18,3 +18,16 @@ Vue.filter('dayjs', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
 Vue.filter('moment', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(dataStr).format(pattern)
 })
+
+Vue.filter('gender', function (gender) {
+  switch (gender) {
+    case 0:
+      return '未知'
+    case 1:
+      return '男'
+    case 2:
+      return '女'
+    default:
+      return '未知'
+  }
+})
