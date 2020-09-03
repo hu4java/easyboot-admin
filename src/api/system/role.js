@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = {
     list: '/role/list',
-    getById: '/role/getById',
+    detail: '/role/detail',
     save: '/role/save',
     update: '/role/update',
     remove: '/role/remove'
@@ -14,8 +14,8 @@ export function getList (params) {
     return request.get(api.list, { params })
 }
 
-export function getRoleById (id) {
-    return request.get(api.getById, { params: { id: id } })
+export function detail (id) {
+    return request.get(api.detail, { params: { id: id } })
 }
 
 export function save (data) {

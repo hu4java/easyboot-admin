@@ -92,7 +92,14 @@ export default {
         okType: 'danger',
         centered: true,
         onOk () {
-          return MenuApi.remove(record.id)
+          return new Promise((resolve, reject) => {
+            MenuApi.remove(record.id).then(() => {
+              self.getList()
+              resolve()
+            }).catch((err) => {
+              reject(err)
+            })
+          })
         }
       })
     }

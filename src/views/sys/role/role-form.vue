@@ -3,7 +3,7 @@
     <a-card :bordered="false">
       <a-button icon="arrow-left" @click="cancel">返回</a-button>
       <a-divider />
-      <a-form-model ref="form" v-model="form" :rules="rules">
+      <a-form-model ref="form" :model="form" :rules="rules">
         <a-row :gutter="24">
           <a-col :span="8">
             <a-form-model-item label="角色代码" prop="code">
@@ -25,13 +25,14 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="拥有权限">
+            <a-form-model-item label="拥有权限" prop="checkedKeys">
               <a-tree
                 v-model="checkedKeys"
                 :tree-data="menuList"
                 checkable
-                checkStrictly
                 defaultExpandAll
+                checkStrictly
+                :replaceFields="{key: 'id'}"
                 :selected-keys="selectedKeys" />
             </a-form-model-item>
           </a-col>
@@ -51,7 +52,7 @@ import * as MenuApi from '@/api/system/menu'
 import * as RoleApi from '@/api/system/role'
 
 export default {
-  name: 'MenuForm',
+  name: 'RoleForm',
   data () {
     return {
       isEdit: false,
@@ -61,11 +62,12 @@ export default {
         name: '',
         code: '',
         status: 0,
-        remark: ''
+        remark: '',
+        menuIds: []
       },
       menuList: [],
       selectedKeys: [],
-      checkedKeys: [],
+      checkedKeys: { checked: [], halfChecked: [] },
       rules: {
         code: [
           { required: true, message: '请填写角色代码' }
@@ -85,9 +87,10 @@ export default {
     const id = this.$route.query.id
     if (id) {
       this.isEdit = true
-      const menuData = await MenuApi.getMenuById(id)
-      if (menuData.success) {
-        this.form = menuData.data
+      const resp = await RoleApi.detail(id)
+      if (resp.success) {
+        this.form = resp.data
+        this.checkedKeys.checked = resp.data.menuIds
       }
     }
   },
@@ -104,6 +107,7 @@ export default {
         if (!valid) {
           return
         }
+        self.form.menuIds = self.checkedKeys.checked
         self.submitLoading = true
         if (self.isEdit) {
           self.update()
@@ -126,7 +130,7 @@ export default {
           centered: true,
           onOk () {
             self.$refs.form.resetFields()
-            self.getMenuList()
+            self.checkedKeys.checked = []
           },
           onCancel () {
             self.cancel()
@@ -146,7 +150,7 @@ export default {
       }, 1000)
     },
     cancel () {
-      this.$router.push({ name: 'MenuList' })
+      this.$router.push({ name: 'RoleList' })
     }
   }
 }

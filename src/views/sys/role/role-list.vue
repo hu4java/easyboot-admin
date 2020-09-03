@@ -97,7 +97,14 @@ export default {
         okType: 'danger',
         centered: true,
         onOk () {
-          return RoleApi.remove(record.id)
+          return new Promise((resolve, reject) => {
+            RoleApi.remove(record.id).then(() => {
+              self.$refs.table.refresh(true)
+              resolve()
+            }).catch((err) => {
+              reject(err)
+            })
+          })
         }
       })
     }
