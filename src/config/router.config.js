@@ -262,6 +262,37 @@ export const asyncRouterMap = [
         meta: { title: '系统管理', icon: 'warning', permission: [ 'exception' ] },
         children: [
           {
+            path: '/sys/dept',
+            name: 'Dept',
+            component: RouteView,
+            redirect: '/sys/dept/list',
+            meta: { title: '部门管理', permission: [ 'user' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/sys/dept/list',
+                name: 'DeptList',
+                component: () => import('@/views/sys/dept/dept-list'),
+                hidden: true,
+                meta: { title: '部门列表', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/dept/add',
+                name: 'DeptAdd',
+                component: () => import('@/views/sys/dept/dept-form'),
+                hidden: true,
+                meta: { title: '新建部门', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/dept/edit',
+                name: 'DeptEdit',
+                component: () => import('@/views/sys/dept/dept-form'),
+                hidden: true,
+                meta: { title: '编辑部门', permission: [ 'user' ] }
+              }
+            ]
+          },
+          {
             path: '/sys/role',
             name: 'Role',
             component: RouteView,
