@@ -55,27 +55,39 @@
       <s-table
         ref="table"
         row-key="id"
+        size="middle"
         :data="loadData"
         :scroll="{ x: 1500 }"
       >
-        <a-table-column key="avatar" title="头像" data-index="avatar" :width="150" fixed="left">
+        <!-- <a-table-column key="avatar" title="头像" data-index="avatar" :width="150" fixed="left">
           <template slot-scope="text">
             {{ text }}
             <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
           </template>
-        </a-table-column>
-        <a-table-column key="name" title="姓名" data-index="name" :width="220" fixed="left"/>
-        <a-table-column key="code" title="员工编号" data-index="code" :width="150"/>
+        </a-table-column> -->
+        <a-table-column key="name" title="姓名" data-index="name" :width="200" fixed="left"/>
         <a-table-column key="gender" title="性别" data-index="gender" :width="80">
           <template slot-scope="text">
             {{ text|gender }}
           </template>
         </a-table-column>
         <a-table-column key="mobile" title="手机号" data-index="mobile" :width="180"/>
+        <a-table-column key="code" title="员工编号" data-index="code" :width="150">
+          <template slot-scope="code">
+            {{ code || '未知' }}
+          </template>
+        </a-table-column>
+
         <a-table-column key="email" title="邮箱" data-index="email" :width="260"/>
-        <a-table-column key="birthday" title="生日" data-index="birthday" :width="180"/>
+        <a-table-column key="birthday" title="生日" data-index="birthday" :width="180">
+          <template slot-scope="birthday">
+            {{ birthday || '未知' }}
+          </template>
+        </a-table-column>
+        <a-table-column key="state" title="人事状态" data-index="state" :width="180"/>
+        <a-table-column key="contractExpireDate" title="合同到期" data-index="contractExpireDate" :width="200"/>
         <a-table-column key="createTime" title="创建时间" data-index="createTime" :width="200"/>
-        <a-table-column
+        <!-- <a-table-column
           key="status"
           title="状态"
           data-index="status"
@@ -86,7 +98,7 @@
             <a-tag color="#87d068" v-if="status === 0">正常</a-tag>
             <a-tag color="#f50" v-else>禁用</a-tag>
           </template>
-        </a-table-column>
+        </a-table-column> -->
         <a-table-column key="remark" title="备注" data-index="remark" />
         <a-table-column key="action" title="操作" :width="180" fixed="right" >
           <template slot-scope="text, record">

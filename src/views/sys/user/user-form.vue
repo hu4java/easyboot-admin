@@ -8,7 +8,7 @@
         :model="form"
         :rules="rules"
         :label-col="{span: 4}"
-        :wrapper-col="{span: 10}"
+        :wrapper-col="{span: 6}"
       >
         <a-form-model-item prop="id" hidden>
           <a-input v-model="form.id" />
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-// import { validMobile, validEmail } from '@/utils/validate'
+import { validateMobile } from '@/utils/validate'
 import * as DeptApi from '@/api/system/dept'
 import * as UserApi from '@/api/system/user'
 import * as RoleApi from '@/api/system/role'
@@ -99,7 +99,7 @@ export default {
         mobile: '',
         email: '',
         brithday: '',
-        deptIds: '',
+        deptIds: [],
         roleIdList: [],
         status: 0
       },
@@ -116,7 +116,8 @@ export default {
           { required: true, message: '请输入姓名' }
         ],
         mobile: [
-          { required: true, message: '请填写手机号' }
+          { required: true, message: '请填写手机号' },
+          { validator: validateMobile }
         ],
         email: [
           { required: true, message: '请填写邮箱' }
