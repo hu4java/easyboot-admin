@@ -3,6 +3,7 @@ import request from '@/utils/request'
 const api = {
     list: '/role/list',
     detail: '/role/detail',
+    selectList: '/role/selectList',
     save: '/role/save',
     update: '/role/update',
     remove: '/role/remove'
@@ -12,6 +13,10 @@ export default api
 
 export function getList (params) {
     return request.get(api.list, { params })
+}
+
+export function getSelectList (params) {
+    return request.get(api.selectList, { params })
 }
 
 export function detail (id) {
