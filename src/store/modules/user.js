@@ -72,7 +72,7 @@ const user = {
           commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_AVATAR', result.avatar)
 
-          resolve(response)
+          resolve(result)
         }).catch(error => {
           reject(error)
         })
@@ -92,7 +92,16 @@ const user = {
           storage.remove(ACCESS_TOKEN)
         })
       })
-    }
+    },
+    // remove token
+    ResetToken ({ commit }) {
+    return new Promise(resolve => {
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      storage.remove(ACCESS_TOKEN)
+      resolve()
+    })
+  }
 
   }
 }

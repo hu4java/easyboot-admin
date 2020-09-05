@@ -63,10 +63,8 @@ request.interceptors.response.use((response) => {
   const data = response.data
   if (!data.success) {
     if (data.code === 1000) {
-      store.dispatch('Logout').then(() => {
-        setTimeout(() => {
-          window.location.reload()
-        }, 1500)
+      store.dispatch('ResetToken').then(() => {
+        window.location.reload()
       })
     } else {
       message.error(data.message)
