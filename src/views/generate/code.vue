@@ -11,7 +11,9 @@
     </template>
     <a-card :bordered="false">
       <template slot="title">
-        <a-button type="primary" :loading="downloadLoading" @click="generate">生成代码</a-button>
+        <a-button icon="rollback" @click="$router.push({name: 'GenerateList'})" style="margin-right:10px;">返回</a-button>
+        <a-button type="primary" icon="download" :loading="downloadLoading" @click="generate">生成代码</a-button>
+
       </template>
       <a-tabs default-active-key="config">
         <a-tab-pane key="config" tab="配置信息">

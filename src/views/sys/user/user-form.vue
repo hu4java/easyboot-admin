@@ -1,7 +1,7 @@
 <template>
   <page-header-wrapper>
     <a-card :bordered="false">
-      <a-button icon="arrow-left" @click="cancel">返回</a-button>
+      <a-button icon="rollback" @click="cancel">返回</a-button>
       <a-divider />
       <a-row :gutter="20">
         <a-col :span="4">

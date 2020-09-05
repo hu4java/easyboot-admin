@@ -1,7 +1,7 @@
 <template>
   <page-header-wrapper>
     <a-card :bordered="false">
-      <a-button icon="arrow-left" @click="cancel">返回</a-button>
+      <a-button icon="rollback" @click="cancel">返回</a-button>
       <a-divider />
       <a-form-model ref="form" :model="form" :rules="rules" :label-col="{span: 8}" :wrapper-col="{span: 6}">
         <a-form-model-item label="上级部门" prop="pid">

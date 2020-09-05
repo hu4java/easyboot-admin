@@ -1,7 +1,7 @@
 <template>
   <page-header-wrapper>
     <a-card :bordered="false">
-      <a-button icon="arrow-left" @click="cancel">返回</a-button>
+      <a-button icon="rollback" @click="cancel">返回</a-button>
       <a-divider />
       <a-form-model ref="form" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 16 }">
         <a-form-model-item prop="id" hidden>
