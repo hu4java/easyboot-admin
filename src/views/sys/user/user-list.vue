@@ -2,46 +2,79 @@
   <page-header-wrapper>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
-        <a-form layout="inline">
+        <a-form :label-col="{span: 5}" :wrapper-col="{span:18}">
           <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item label="姓名">
                 <a-input v-model="query.name" allow-clear/>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="手机号">
+                <a-input v-model="query.mobile" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <a-form-item label="性别">
-                <a-select v-model="query.status" placeholder="请选择" default-value="0" allow-clear>
+                <a-select v-model="query.gender" placeholder="请选择" default-value="0" allow-clear>
                   <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="2">男</a-select-option>
+                  <a-select-option value="1">男</a-select-option>
                   <a-select-option value="2">女</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="状态">
-                <a-select v-model="query.status" placeholder="请选择" default-value="0" allow-clear>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="人事状态">
+                <a-select v-model="query.state" placeholder="请选择" allow-clear>
                   <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="0">正常</a-select-option>
-                  <a-select-option value="1">禁用</a-select-option>
+                  <a-select-option v-for="state in personnelStates" :key="state.value" :value="state.value">
+                    {{ state.title }}
+                  </a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="部门">
-                <a-select v-model="query.status" placeholder="请选择" default-value="0" allow-clear>
-                  <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="0">正常</a-select-option>
-                  <a-select-option value="1">禁用</a-select-option>
+          </a-row>
+          <a-row :gutter="48">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="生日">
+                <a-date-picker v-model="query.birthday" placeholder="请选择" value-format="YYYY-MM-DD" style="width:100%"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="所属部门">
+                <a-tree-select
+                  v-model="query.deptId"
+                  allowClear
+                  showSearch
+                  treeNodeFilterProp="title"
+                  style="width: 100%"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  :tree-data="deptList"
+                  :replaceFields="{key: 'id', title: 'name', value: 'id'}"
+                  placeholder="请选择"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="角色">
+                <a-select
+                  allowClear
+                  v-model="query.roleId"
+                  style="width: 100%"
+                  placeholder="请选择"
+                  optionFilterProp="label"
+                >
+                  <a-select-option v-for="role in roleList" :key="role.id">
+                    {{ role.name }}
+                  </a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-
-            <a-col :md="8" :sm="24">
-              <span class="table-page-search-submitButtons">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.query = {}">重置</a-button>
-              </span>
+          </a-row>
+          <a-row>
+            <a-col :md="6" :sm="24" :offset="18" style="text-align:right">
+              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button style="margin-left: 8px;margin-right: 18px;" @click="() => this.query = {}">重置</a-button>
             </a-col>
           </a-row>
         </a-form>
@@ -84,7 +117,7 @@
             {{ birthday || '未知' }}
           </template>
         </a-table-column>
-        <a-table-column key="state" title="人事状态" data-index="state" :width="180"/>
+        <a-table-column key="state" title="人事状态" data-index="stateFormat" :width="180"/>
         <a-table-column key="contractExpireDate" title="合同到期" data-index="contractExpireDate" :width="200"/>
         <a-table-column key="createTime" title="创建时间" data-index="createTime" :width="200"/>
         <!-- <a-table-column
@@ -114,14 +147,28 @@
 
 <script>
 import { STable } from '@/components'
+import { personnelStates } from '@/utils/const'
+import * as DeptApi from '@/api/system/dept'
+import * as RoleApi from '@/api/system/role'
 import * as UserApi from '@/api/system/user'
 
 export default {
-  name: 'RoleList',
+  name: 'UserList',
   components: { STable },
   data () {
     return {
-      query: { name: '', status: undefined },
+      advanced: false,
+      personnelStates,
+      deptList: [],
+      roleList: [],
+      query: {
+        name: '',
+        state: '',
+        gender: '',
+        deptId: '',
+        startBirthday: '',
+        endBirthday: ''
+      },
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.query)
         return UserApi.getList(requestParameters)
@@ -131,7 +178,15 @@ export default {
       }
     }
   },
-  created () {
+  async created () {
+    const depts = await DeptApi.getList()
+    if (depts.success) {
+      this.deptList = depts.data
+    }
+    const roles = await RoleApi.getSelectList()
+    if (roles.success) {
+      this.roleList = roles.data
+    }
   },
   methods: {
     add () {

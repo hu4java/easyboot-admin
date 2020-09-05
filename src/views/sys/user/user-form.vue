@@ -1,88 +1,118 @@
 <template>
   <page-header-wrapper>
     <a-card :bordered="false">
-      <a-button icon="arrow-left" @click="() => $router.go(-1)">返回</a-button>
+      <a-button icon="arrow-left" @click="cancel">返回</a-button>
       <a-divider />
-      <a-form-model
-        ref="form"
-        :model="form"
-        :rules="rules"
-        :label-col="{span: 4}"
-        :wrapper-col="{span: 6}"
-      >
-        <a-form-model-item prop="id" hidden>
-          <a-input v-model="form.id" />
-        </a-form-model-item>
-        <a-form-model-item v-if="!isEdit" label="用户名" prop="username">
+      <a-row :gutter="20">
+        <a-col :span="4">
+          <a-upload
+            name="avatar"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          >
+            <div>
+              <a-icon type="plus" />
+              <div class="ant-upload-text">
+                上传头像
+              </div>
+            </div>
+          </a-upload>
+        </a-col>
+        <a-col :span="20">
+          <a-form-model
+            ref="form"
+            :model="form"
+            :rules="rules"
+            :label-col="{span: 4}"
+            :wrapper-col="{span: 6}"
+          >
+            <a-form-model-item prop="id" hidden>
+              <a-input v-model="form.id" />
+            </a-form-model-item>
+            <!-- <a-form-model-item v-if="!isEdit" label="用户名" prop="username">
           <a-input v-model="form.username" />
         </a-form-model-item>
         <a-form-model-item v-if="!isEdit" label="密码" prop="password">
           <a-input v-model="form.password" type="password" />
-        </a-form-model-item>
-        <a-form-model-item label="姓名" prop="name">
-          <a-input v-model="form.name" />
-        </a-form-model-item>
-        <a-form-model-item label="性别" prop="gender">
-          <a-radio-group v-model="form.gender">
-            <a-radio :value="1">男</a-radio>
-            <a-radio :value="2">女</a-radio>
-          </a-radio-group>
-        </a-form-model-item>
-        <a-form-model-item label="手机号" prop="mobile">
-          <a-input v-model="form.mobile" />
-        </a-form-model-item>
-        <a-form-model-item label="邮箱" prop="email">
-          <a-input v-model="form.email" />
-        </a-form-model-item>
-        <a-form-model-item label="生日" prop="birthday">
-          <a-date-picker v-model="form.birthday" value-format="YYYY-MM-DD"/>
-        </a-form-model-item>
-        <a-form-model-item label="部门" prop="deptIds">
-          <a-tree-select
-            v-model="form.deptIds"
-            allowClear
-            showSearch
-            multiple
-            treeNodeFilterProp="title"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            :tree-data="deptList"
-            :replaceFields="{key: 'id', title: 'name', value: 'id'}"
-            placeholder="请选择"
+        </a-form-model-item> -->
+            <a-form-model-item label="姓名" prop="name">
+              <a-input v-model="form.name" />
+            </a-form-model-item>
+            <a-form-model-item label="性别" prop="gender">
+              <a-radio-group v-model="form.gender">
+                <a-radio :value="1">男</a-radio>
+                <a-radio :value="2">女</a-radio>
+              </a-radio-group>
+            </a-form-model-item>
+            <a-form-model-item label="手机号" prop="mobile">
+              <a-input v-model="form.mobile" />
+            </a-form-model-item>
+            <a-form-model-item label="邮箱" prop="email">
+              <a-input v-model="form.email" />
+            </a-form-model-item>
+            <a-form-model-item label="生日" prop="birthday">
+              <a-date-picker v-model="form.birthday" value-format="YYYY-MM-DD"/>
+            </a-form-model-item>
+            <a-form-model-item label="部门" prop="deptIds">
+              <a-tree-select
+                v-model="form.deptIds"
+                allowClear
+                showSearch
+                multiple
+                treeNodeFilterProp="title"
+                style="width: 100%"
+                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                :tree-data="deptList"
+                :replaceFields="{key: 'id', title: 'name', value: 'id'}"
+                placeholder="请选择"
 
-          />
-        </a-form-model-item>
-        <a-form-model-item label="角色" prop="roleIds">
-          <a-select
-            v-model="form.roleIds"
-            mode="multiple"
-            style="width: 100%"
-            placeholder="请选择"
-            optionFilterProp="label"
-          >
-            <a-select-option v-for="role in roleList" :key="role.id">
-              {{ role.name }}
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item label="状态" prop="status">
-          <a-radio-group v-model="form.status">
-            <a-radio :value="0">启用</a-radio>
-            <a-radio :value="1">禁用</a-radio>
-          </a-radio-group>
-        </a-form-model-item>
-        <a-form-model-item :wrapper-col="{ span: 6, offset: 4 }">
-          <a-button type="primary" v-if="isEdit" @click="submitForm" :loading="submitLoading">{{ submitLoading ? '更新中':'更新' }}</a-button>
-          <a-button type="primary" v-else @click="submitForm" :loading="submitLoading">{{ submitLoading ? '提交中':'提交' }}</a-button>
-          <a-button style="margin-left: 10px;" @click="cancel">取消</a-button>
-        </a-form-model-item>
-      </a-form-model>
+              />
+            </a-form-model-item>
+            <a-form-model-item label="角色" prop="roleIds">
+              <a-select
+                v-model="form.roleIds"
+                mode="multiple"
+                style="width: 100%"
+                placeholder="请选择"
+                optionFilterProp="label"
+              >
+                <a-select-option v-for="role in roleList" :key="role.id">
+                  {{ role.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label="人事状态" prop="state">
+              <a-select
+                v-model="form.state"
+                style="width: 100%"
+                placeholder="请选择"
+              >
+                <a-select-option v-for="state in personnelStates" :key="state.value" :value="state.value">
+                  {{ state.title }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label="合同到期" prop="contractExpireDate">
+              <a-date-picker v-model="form.contractExpireDate" value-format="YYYY-MM-DD"/>
+            </a-form-model-item>
+            <a-form-model-item :wrapper-col="{ span: 6, offset: 4 }">
+              <a-button type="primary" v-if="isEdit" @click="submitForm" :loading="submitLoading">{{ submitLoading ? '更新中':'更新' }}</a-button>
+              <a-button type="primary" v-else @click="submitForm" :loading="submitLoading">{{ submitLoading ? '提交中':'提交' }}</a-button>
+              <a-button style="margin-left: 10px;" @click="cancel">取消</a-button>
+            </a-form-model-item>
+          </a-form-model>
+        </a-col>
+      </a-row>
+
     </a-card>
   </page-header-wrapper>
 </template>
 
 <script>
 import { validateMobile } from '@/utils/validate'
+import { personnelStates } from '@/utils/const'
 import * as DeptApi from '@/api/system/dept'
 import * as UserApi from '@/api/system/user'
 import * as RoleApi from '@/api/system/role'
@@ -104,7 +134,8 @@ export default {
         brithday: '',
         deptIds: [],
         roleIds: [],
-        status: 0
+        state: 5,
+        contractExpireDate: ''
       },
       rules: {
         username: [
@@ -116,7 +147,7 @@ export default {
           { max: 20, message: '密码长度 6-20' }
         ],
         name: [
-          { required: true, message: '请输入姓名' }
+          { required: true, message: '请填写姓名' }
         ],
         mobile: [
           { required: true, message: '请填写手机号' },
@@ -133,6 +164,7 @@ export default {
           { required: true, message: '请选择角色' }
         ]
       },
+      personnelStates,
       deptList: [],
       roleList: []
     }
@@ -141,20 +173,67 @@ export default {
     const id = this.$route.query.id
     if (id) {
       this.isEdit = true
-      UserApi.detail(id).then(response => {
-        this.form = response.data
-      })
+
+      const detail = await UserApi.detail(id)
+      if (detail.success) {
+        this.form = detail.data
+      }
     }
-    DeptApi.getList().then(response => {
-      this.deptList = response.data
-    })
-    RoleApi.getSelectList().then(response => {
-      this.roleList = response.data
-    })
+    const deptList = await DeptApi.getList()
+    if (deptList.success) {
+      this.deptList = deptList.data
+    }
+    const roleList = await RoleApi.getSelectList()
+    if (roleList.success) {
+      this.roleList = roleList.data
+    }
   },
   methods: {
     submitForm: function () {
-
+      const self = this
+      self.$refs.form.validate(async (valid) => {
+        if (!valid) {
+          return
+        }
+        self.submitLoading = true
+        if (self.isEdit) {
+          self.update()
+        } else {
+          self.save()
+        }
+      })
+    },
+    async save () {
+      const self = this
+      const resp = await UserApi.save(this.form)
+      if (resp.success) {
+        self.$message.success('保存成功')
+        self.$confirm({
+          title: '提示',
+          content: '保存成功',
+          okText: '继续新增',
+          okType: 'primary',
+          cancelText: '返回列表页',
+          centered: true,
+          onOk () {
+            self.$refs.form.resetFields()
+          },
+          onCancel () {
+            self.cancel()
+          }
+        })
+      }
+      self.submitLoading = false
+    },
+    async update () {
+      const self = this
+      const resp = await UserApi.update(this.form)
+      if (resp.success) {
+        self.$message.success('更新成功')
+      }
+      setTimeout(function () {
+        self.submitLoading = false
+      }, 1000)
     },
     cancel: function () {
       this.$router.push({ name: 'UserList' })
@@ -162,3 +241,20 @@ export default {
   }
 }
 </script>
+<style>
+.avatar-uploader > .ant-upload {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  float: right;
+}
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}
+</style>
