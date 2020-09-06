@@ -5,7 +5,7 @@
       <a-divider />
       <a-row :gutter="20">
         <a-col :span="4">
-          <a-upload
+          <!-- <a-upload
             name="avatar"
             list-type="picture-card"
             class="avatar-uploader"
@@ -18,90 +18,118 @@
                 上传头像
               </div>
             </div>
-          </a-upload>
+          </a-upload> -->
+          <a-button @click="cropper">上传</a-button>
+          <avatar-cropper ref="cropper"/>
         </a-col>
         <a-col :span="20">
           <a-form-model
             ref="form"
             :model="form"
             :rules="rules"
-            :label-col="{span: 4}"
-            :wrapper-col="{span: 6}"
+            :label-col="{span: 5}"
+            :wrapper-col="{span: 18}"
           >
-            <a-form-model-item prop="id" hidden>
-              <a-input v-model="form.id" />
-            </a-form-model-item>
-            <!-- <a-form-model-item v-if="!isEdit" label="用户名" prop="username">
-          <a-input v-model="form.username" />
-        </a-form-model-item>
-        <a-form-model-item v-if="!isEdit" label="密码" prop="password">
-          <a-input v-model="form.password" type="password" />
-        </a-form-model-item> -->
-            <a-form-model-item label="姓名" prop="name">
-              <a-input v-model="form.name" />
-            </a-form-model-item>
-            <a-form-model-item label="性别" prop="gender">
-              <a-radio-group v-model="form.gender">
-                <a-radio :value="1">男</a-radio>
-                <a-radio :value="2">女</a-radio>
-              </a-radio-group>
-            </a-form-model-item>
-            <a-form-model-item label="手机号" prop="mobile">
-              <a-input v-model="form.mobile" />
-            </a-form-model-item>
-            <a-form-model-item label="邮箱" prop="email">
-              <a-input v-model="form.email" />
-            </a-form-model-item>
-            <a-form-model-item label="生日" prop="birthday">
-              <a-date-picker v-model="form.birthday" value-format="YYYY-MM-DD"/>
-            </a-form-model-item>
-            <a-form-model-item label="部门" prop="deptIds">
-              <a-tree-select
-                v-model="form.deptIds"
-                allowClear
-                showSearch
-                multiple
-                treeNodeFilterProp="title"
-                style="width: 100%"
-                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                :tree-data="deptList"
-                :replaceFields="{key: 'id', title: 'name', value: 'id'}"
-                placeholder="请选择"
+            <a-row :gutter="20">
+              <a-col :span="8">
+                <a-form-model-item prop="id" hidden>
+                  <a-input v-model="form.id" />
+                </a-form-model-item>
+                <a-form-model-item label="姓名" prop="name">
+                  <a-input v-model="form.name" />
+                </a-form-model-item>
+                <a-form-model-item label="性别" prop="gender">
+                  <a-radio-group v-model="form.gender">
+                    <a-radio :value="1">男</a-radio>
+                    <a-radio :value="2">女</a-radio>
+                  </a-radio-group>
+                </a-form-model-item>
+              </a-col>
+              <a-col :span="8" >
+                <a-form-model-item v-if="!isEdit" label="登录账号" prop="username">
+                  <a-input v-model="form.username" />
+                </a-form-model-item>
+                <a-form-model-item v-if="!isEdit" label="登录密码" prop="password">
+                  <a-input v-model="form.password" type="password" />
+                </a-form-model-item>
+              </a-col>
+            </a-row>
+            <a-row :gutter="20">
+              <a-col :span="8">
+                <a-form-model-item label="生日" prop="birthday">
+                  <a-date-picker v-model="form.birthday" value-format="YYYY-MM-DD" style="width:100%;"/>
+                </a-form-model-item>
+              </a-col>
+            </a-row>
+            <a-row :gutter="20">
+              <a-col :span="8">
+                <a-form-model-item label="手机号" prop="mobile">
+                  <a-input v-model="form.mobile" />
+                </a-form-model-item>
+                <a-form-model-item label="邮箱" prop="email">
+                  <a-input v-model="form.email" />
+                </a-form-model-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-model-item label="部门" prop="deptIds">
+                  <a-tree-select
+                    v-model="form.deptIds"
+                    allowClear
+                    showSearch
+                    multiple
+                    treeNodeFilterProp="title"
+                    style="width: 100%"
+                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :tree-data="deptList"
+                    :replaceFields="{key: 'id', title: 'name', value: 'id'}"
+                    placeholder="请选择"
 
-              />
-            </a-form-model-item>
-            <a-form-model-item label="角色" prop="roleIds">
-              <a-select
-                v-model="form.roleIds"
-                mode="multiple"
-                style="width: 100%"
-                placeholder="请选择"
-                optionFilterProp="label"
-              >
-                <a-select-option v-for="role in roleList" :key="role.id">
-                  {{ role.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-            <a-form-model-item label="人事状态" prop="state">
-              <a-select
-                v-model="form.state"
-                style="width: 100%"
-                placeholder="请选择"
-              >
-                <a-select-option v-for="state in personnelStates" :key="state.value" :value="state.value">
-                  {{ state.title }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-            <a-form-model-item label="合同到期" prop="contractExpireDate">
-              <a-date-picker v-model="form.contractExpireDate" value-format="YYYY-MM-DD"/>
-            </a-form-model-item>
-            <a-form-model-item :wrapper-col="{ span: 6, offset: 4 }">
-              <a-button type="primary" v-if="isEdit" @click="submitForm" :loading="submitLoading">{{ submitLoading ? '更新中':'更新' }}</a-button>
-              <a-button type="primary" v-else @click="submitForm" :loading="submitLoading">{{ submitLoading ? '提交中':'提交' }}</a-button>
-              <a-button style="margin-left: 10px;" @click="cancel">取消</a-button>
-            </a-form-model-item>
+                  />
+                </a-form-model-item>
+                <a-form-model-item label="角色" prop="roleIds">
+                  <a-select
+                    v-model="form.roleIds"
+                    mode="multiple"
+                    style="width: 100%"
+                    placeholder="请选择"
+                    optionFilterProp="label"
+                  >
+                    <a-select-option v-for="role in roleList" :key="role.id">
+                      {{ role.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-model-item>
+              </a-col>
+            </a-row>
+            <a-row :gutter="20">
+              <a-col :span="8">
+                <a-form-model-item label="人事状态" prop="state">
+                  <a-select
+                    v-model="form.state"
+                    style="width: 100%"
+                    placeholder="请选择"
+                  >
+                    <a-select-option v-for="state in personnelStates" :key="state.value" :value="state.value">
+                      {{ state.title }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-model-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-model-item label="合同到期" prop="contractExpireDate">
+                  <a-date-picker v-model="form.contractExpireDate" value-format="YYYY-MM-DD" style="width:100%;"/>
+                </a-form-model-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="8" >
+                <a-form-model-item :wrapper-col="{ offset: 5 }">
+                  <a-button type="primary" v-if="isEdit" @click="submitForm" :loading="submitLoading">{{ submitLoading ? '更新中':'更新' }}</a-button>
+                  <a-button type="primary" v-else @click="submitForm" :loading="submitLoading">{{ submitLoading ? '提交中':'提交' }}</a-button>
+                  <a-button style="margin-left: 10px;" @click="cancel">取消</a-button>
+                </a-form-model-item>
+              </a-col>
+            </a-row>
           </a-form-model>
         </a-col>
       </a-row>
@@ -111,6 +139,7 @@
 </template>
 
 <script>
+import AvatarCropper from './components/AvatarCropper'
 import { validateMobile } from '@/utils/validate'
 import { personnelStates } from '@/utils/const'
 import * as DeptApi from '@/api/system/dept'
@@ -119,6 +148,7 @@ import * as RoleApi from '@/api/system/role'
 
 export default {
   name: 'UserForm',
+  components: { AvatarCropper },
   data () {
     return {
       isEdit: false,
@@ -139,10 +169,10 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入用户名' }
+          { required: true, message: '请填写登录账号' }
         ],
         password: [
-          { required: true, message: '请输入密码' },
+          { required: true, message: '请填写登录密码' },
           { min: 6, message: '密码长度 6-20' },
           { max: 20, message: '密码长度 6-20' }
         ],
@@ -189,6 +219,9 @@ export default {
     }
   },
   methods: {
+    cropper () {
+      this.$refs.cropper.show()
+    },
     submitForm: function () {
       const self = this
       self.$refs.form.validate(async (valid) => {
