@@ -26,6 +26,7 @@ import StandardFormRow from '@/components/StandardFormRow'
 import ArticleListContent from '@/components/ArticleListContent'
 
 import Dialog from '@/components/Dialog'
+import AvatarCropper from '@/components/AvatarCropper'
 
 export {
   AvatarList,
@@ -52,5 +53,6 @@ export {
   StandardFormRow,
   ArticleListContent,
 
-  Dialog
+  Dialog,
+  AvatarCropper
 }

@@ -4,23 +4,14 @@
       <a-button icon="rollback" @click="cancel">返回</a-button>
       <a-divider />
       <a-row :gutter="20">
-        <a-col :span="4">
-          <!-- <a-upload
-            name="avatar"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          >
-            <div>
-              <a-icon type="plus" />
-              <div class="ant-upload-text">
-                上传头像
-              </div>
-            </div>
-          </a-upload> -->
-          <a-button @click="cropper">上传</a-button>
-          <avatar-cropper ref="cropper"/>
+        <a-col :span="4" class="avatar-uploader">
+          <div class="avatar">
+            <!-- <img :src="form.avatar"/> -->
+            <a-avatar :src="form.avatar" :size="128" />
+          </div>
+
+          <a-button class="avatar-upload-btn" @click="$refs.avatarCropper.show()"> 上传 </a-button>
+          <avatar-cropper ref="avatarCropper" @complete="setAvatar" />
         </a-col>
         <a-col :span="20">
           <a-form-model
@@ -45,12 +36,12 @@
                   </a-radio-group>
                 </a-form-model-item>
               </a-col>
-              <a-col :span="8" >
-                <a-form-model-item v-if="!isEdit" label="登录账号" prop="username">
+              <a-col :span="8" v-if="!isEdit">
+                <a-form-model-item label="登录账号" prop="username">
                   <a-input v-model="form.username" />
                 </a-form-model-item>
-                <a-form-model-item v-if="!isEdit" label="登录密码" prop="password">
-                  <a-input v-model="form.password" type="password" />
+                <a-form-model-item label="登录密码" prop="password">
+                  <a-input-password v-model="form.password" type="password" />
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -139,7 +130,7 @@
 </template>
 
 <script>
-import AvatarCropper from './components/AvatarCropper'
+import { AvatarCropper } from '@/components'
 import { validateMobile } from '@/utils/validate'
 import { personnelStates } from '@/utils/const'
 import * as DeptApi from '@/api/system/dept'
@@ -158,6 +149,7 @@ export default {
         username: '',
         password: '',
         name: '',
+        avatar: '',
         gender: 1,
         mobile: '',
         email: '',
@@ -219,8 +211,12 @@ export default {
     }
   },
   methods: {
-    cropper () {
-      this.$refs.cropper.show()
+    setAvatar (url) {
+      console.log(url)
+      const self = this
+      self.$nextTick(() => {
+        self.form.avatar = url
+      })
     },
     submitForm: function () {
       const self = this
@@ -274,20 +270,19 @@ export default {
   }
 }
 </script>
-<style>
-.avatar-uploader > .ant-upload {
+<style scoped>
+.avatar-uploader {
+  text-align: center;
+}
+.avatar-uploader > .avatar {
   width: 128px;
   height: 128px;
   border-radius: 50%;
-  float: right;
-}
-.ant-upload-select-picture-card i {
-  font-size: 32px;
-  color: #999;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
-.ant-upload-select-picture-card .ant-upload-text {
-  margin-top: 8px;
-  color: #666;
+.avatar-upload-btn {
+  margin-top: 30px;
 }
 </style>
