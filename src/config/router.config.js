@@ -384,6 +384,23 @@ export const asyncRouterMap = [
                 meta: { title: '编辑菜单', permission: [ 'user' ] }
               }
             ]
+          },
+          {
+            path: '/sys/dict',
+            name: 'Dict',
+            component: RouteView,
+            redirect: '/sys/dict/list',
+            meta: { title: '字典管理', permission: [ 'user' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/sys/dict/list',
+                name: 'DictList',
+                component: () => import('@/views/sys/dict/dict-list'),
+                hidden: true,
+                meta: { title: '字典列表', permission: [ 'user' ] }
+              }
+            ]
           }
 
         ]
