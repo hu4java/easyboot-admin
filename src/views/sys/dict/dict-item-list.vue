@@ -5,7 +5,16 @@
         <a-form :label-col="{span: 5}" :wrapper-col="{span:18}">
           <a-row :gutter="48">
             <a-col :md="6" :sm="24">
-              <a-form-item label="名称">
+              <a-form-item label="字典">
+                <a-select v-model="query.dictType" placeholder="请选择" allow-clear>
+
+                  <a-select-option value="0">正常</a-select-option>
+                  <a-select-option value="1">禁用</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="数据标题">
                 <a-input v-model="query.name" allow-clear/>
               </a-form-item>
             </a-col>
@@ -43,8 +52,8 @@
         :data="loadData"
         :scroll="{ x: 1500 }"
       >
-        <a-table-column key="name" title="字典名称" data-index="name" :width="200" fixed="left"/>
-        <a-table-column key="type" title="类型" data-index="type" :width="180"/>
+        <a-table-column key="name" title="数据标题" data-index="name" :width="200" fixed="left"/>
+        <a-table-column key="type" title="数据值" data-index="type" :width="180"/>
         <a-table-column
           key="status"
           title="状态"
@@ -77,17 +86,23 @@
           <a-form-model-item label="id" prop="id" hidden>
             <a-input v-model="form.id" />
           </a-form-model-item>
-          <a-form-model-item label="字典名称" prop="name">
+          <a-form-model-item label="字典类型" prop="dictType">
+            <a-input v-model="form.dictType" disabled />
+          </a-form-model-item>
+          <a-form-model-item label="数据标题" prop="title">
             <a-input v-model="form.name" />
           </a-form-model-item>
-          <a-form-model-item label="字典类型" prop="type">
-            <a-input v-model="form.type" />
+          <a-form-model-item label="数据值" prop="value">
+            <a-input v-model="form.value" />
           </a-form-model-item>
           <a-form-model-item label="状态" prop="status">
             <a-radio-group v-model="form.status">
               <a-radio :value="0">正常</a-radio>
               <a-radio :value="1">禁用</a-radio>
             </a-radio-group>
+          </a-form-model-item>
+          <a-form-model-item label="排序" prop="orderNum">
+            <a-input-number v-model="form.orderNum" :min="1" />
           </a-form-model-item>
           <a-form-model-item label="备注" prop="remark">
             <a-input v-model="form.remark" type="textarea" />
@@ -101,10 +116,11 @@
 
 <script>
 import { STable } from '@/components'
-import * as DictApi from '@/api/system/dict'
+// import * as DictApi from '@/api/system/dict'
+import * as DictItemApi from '@/api/system/dictItem'
 
 export default {
-  name: 'DictList',
+  name: 'DictItemList',
   components: { STable },
   data () {
     return {
@@ -118,22 +134,23 @@ export default {
       },
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.query)
-        return DictApi.getList(requestParameters)
+        return DictItemApi.getList(requestParameters)
           .then(res => {
             return res.data
           })
       },
       form: {
         id: '',
-        name: '',
-        type: '',
+        title: '',
+        value: '',
+        dictType: '',
         status: 0,
         remark: ''
       }
     }
   },
-  created () {
-
+  async created () {
+    // const resp = DictApi.getList()
   },
   methods: {
     add () {
@@ -145,7 +162,7 @@ export default {
       })
     },
     view (record) {
-      this.$router.push({ name: 'DictItemList', query: { dictId: record.id } })
+
     },
     edit (record) {
       this.visible = true
@@ -177,7 +194,7 @@ export default {
     },
     async save () {
       const self = this
-      const resp = await DictApi.save(this.form)
+      const resp = await DictItemApi.save(this.form)
       if (resp.success) {
         self.$message.success('保存成功')
         self.$refs.table.refresh(true)
@@ -186,7 +203,7 @@ export default {
     },
     async update () {
       const self = this
-      const resp = await DictApi.update(this.form)
+      const resp = await DictItemApi.update(this.form)
       if (resp.success) {
         self.$message.success('更新成功')
         self.$refs.table.refresh(true)
@@ -203,7 +220,7 @@ export default {
         centered: true,
         onOk () {
           return new Promise((resolve, reject) => {
-            DictApi.remove(record.id).then(() => {
+            DictItemApi.remove(record.id).then(() => {
               self.$refs.table.refresh(true)
               resolve()
             }).catch((err) => {

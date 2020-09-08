@@ -399,6 +399,13 @@ export const asyncRouterMap = [
                 component: () => import('@/views/sys/dict/dict-list'),
                 hidden: true,
                 meta: { title: '字典列表', permission: [ 'user' ] }
+              },
+              {
+                path: '/sys/dict/item/list',
+                name: 'DictItemList',
+                component: () => import('@/views/sys/dict/dict-item-list'),
+                hidden: true,
+                meta: { title: '字典数据', permission: [ 'user' ] }
               }
             ]
           }
