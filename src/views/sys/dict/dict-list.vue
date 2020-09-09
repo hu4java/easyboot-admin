@@ -39,7 +39,6 @@
       <s-table
         ref="table"
         row-key="id"
-        size="middle"
         :data="loadData"
         :scroll="{ x: 1500 }"
       >
@@ -73,7 +72,7 @@
           <a-button key="submit" type="primary" v-if="isEdit" :loading="submitLoading" @click="submit">{{ submitLoading? '更新中':'更新' }}</a-button>
           <a-button key="submit" type="primary" v-else :loading="submitLoading" @click="submit">{{ submitLoading? '提交中':'提交' }}</a-button>
         </template>
-        <a-form-model ref="form" :model="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 14 }">
+        <a-form-model ref="form" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 14 }">
           <a-form-model-item label="id" prop="id" hidden>
             <a-input v-model="form.id" />
           </a-form-model-item>
@@ -129,6 +128,14 @@ export default {
         type: '',
         status: 0,
         remark: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入字典名称' }
+        ],
+        type: [
+          { required: true, message: '请输入字典类型' }
+        ]
       }
     }
   },
@@ -145,7 +152,7 @@ export default {
       })
     },
     view (record) {
-      this.$router.push({ name: 'DictItemList', query: { dictId: record.id } })
+      this.$router.push({ name: 'DictItemList', query: { dictType: record.type } })
     },
     edit (record) {
       this.visible = true
@@ -183,6 +190,7 @@ export default {
         self.$refs.table.refresh(true)
         self.cancel()
       }
+      this.submitLoading = false
     },
     async update () {
       const self = this
@@ -192,6 +200,7 @@ export default {
         self.$refs.table.refresh(true)
         self.cancel()
       }
+      this.submitLoading = false
     },
     remove (record) {
       const self = this

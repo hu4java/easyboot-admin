@@ -6,21 +6,14 @@
           <a-row :gutter="48">
             <a-col :md="6" :sm="24">
               <a-form-item label="字典">
-                <a-select v-model="query.dictType" placeholder="请选择" allow-clear>
-
-                  <a-select-option value="0">正常</a-select-option>
-                  <a-select-option value="1">禁用</a-select-option>
+                <a-select v-model="query.dictType">
+                  <a-select-option v-for="dict in dictList" :key="dict.dictType" :value="dict.type">{{ dict.name }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item label="数据标题">
                 <a-input v-model="query.name" allow-clear/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="手机号">
-                <a-input v-model="query.mobile" allow-clear/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -33,7 +26,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
-              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button type="primary" @click="search">查询</a-button>
               <a-button style="margin-left: 8px;" @click="() => this.query = {}">重置</a-button>
             </a-col>
           </a-row>
@@ -41,6 +34,7 @@
       </div>
 
       <div class="table-operator">
+        <a-button icon="rollback" @click="back">返回</a-button>
         <a-button type="primary" icon="plus" @click="add">新建</a-button>
         <a-button icon="sync" @click="$refs.table.refresh(true)">刷新</a-button>
       </div>
@@ -48,12 +42,12 @@
       <s-table
         ref="table"
         row-key="id"
-        size="middle"
         :data="loadData"
         :scroll="{ x: 1500 }"
       >
-        <a-table-column key="name" title="数据标题" data-index="name" :width="200" fixed="left"/>
-        <a-table-column key="type" title="数据值" data-index="type" :width="180"/>
+        <a-table-column key="title" title="数据标题" data-index="title" :width="200"/>
+        <a-table-column key="value" title="数据值" data-index="value" :width="180"/>
+        <a-table-column key="orderNum" title="排序" data-index="orderNum" :width="180"/>
         <a-table-column
           key="status"
           title="状态"
@@ -66,7 +60,7 @@
           </template>
         </a-table-column>
         <a-table-column key="remark" title="备注" data-index="remark" />
-        <a-table-column key="action" title="操作" :width="180" fixed="right" >
+        <a-table-column key="action" title="操作" :width="180" >
           <template slot-scope="text, record">
             <a @click="view(record)">数据项</a>
             <a-divider type="vertical" />
@@ -82,7 +76,7 @@
           <a-button key="submit" type="primary" v-if="isEdit" :loading="submitLoading" @click="submit">{{ submitLoading? '更新中':'更新' }}</a-button>
           <a-button key="submit" type="primary" v-else :loading="submitLoading" @click="submit">{{ submitLoading? '提交中':'提交' }}</a-button>
         </template>
-        <a-form-model ref="form" :model="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 14 }">
+        <a-form-model ref="form" :model="form" :rules="rules" :label-col="{ span: 5 }" :wrapper-col="{ span: 14 }">
           <a-form-model-item label="id" prop="id" hidden>
             <a-input v-model="form.id" />
           </a-form-model-item>
@@ -90,7 +84,7 @@
             <a-input v-model="form.dictType" disabled />
           </a-form-model-item>
           <a-form-model-item label="数据标题" prop="title">
-            <a-input v-model="form.name" />
+            <a-input v-model="form.title" />
           </a-form-model-item>
           <a-form-model-item label="数据值" prop="value">
             <a-input v-model="form.value" />
@@ -116,7 +110,7 @@
 
 <script>
 import { STable } from '@/components'
-// import * as DictApi from '@/api/system/dict'
+import * as DictApi from '@/api/system/dict'
 import * as DictItemApi from '@/api/system/dictItem'
 
 export default {
@@ -130,8 +124,9 @@ export default {
       query: {
         name: '',
         state: '',
-        type: ''
+        dictType: ''
       },
+      dictList: [],
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.query)
         return DictItemApi.getList(requestParameters)
@@ -145,14 +140,43 @@ export default {
         value: '',
         dictType: '',
         status: 0,
+        orderNum: 1,
         remark: ''
+      },
+      rules: {
+        title: [
+          { required: true, message: '请输入数据标题' }
+        ],
+        value: [
+          { required: true, message: '请输入数据值' }
+        ],
+        orderNum: [
+          { required: true, message: '请输入排序' }
+        ]
       }
     }
   },
   async created () {
-    // const resp = DictApi.getList()
+    try {
+      const dictType = this.$route.query.dictType
+      this.query.dictType = dictType
+      this.form.dictType = dictType
+      const resp = await DictApi.getSelectList()
+      if (resp.success) {
+        this.dictList = resp.data
+      }
+    } catch (e) {
+      console.log(e)
+    }
   },
   methods: {
+    search () {
+      this.form.dictType = this.query.dictType
+      this.$refs.table.refresh(true)
+    },
+    back () {
+      this.$router.push({ name: 'DictList' })
+    },
     add () {
       this.visible = true
       this.isEdit = false
@@ -160,9 +184,6 @@ export default {
       this.$nextTick(() => {
         self.$refs.form.resetFields()
       })
-    },
-    view (record) {
-
     },
     edit (record) {
       this.visible = true

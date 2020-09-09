@@ -88,7 +88,6 @@
       <s-table
         ref="table"
         row-key="id"
-        size="middle"
         :data="loadData"
         :scroll="{ x: 1500 }"
       >

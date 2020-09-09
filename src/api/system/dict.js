@@ -2,6 +2,7 @@ import request from '@/utils/request'
 
 const api = {
     list: '/dict/list',
+    selectList: '/dict/selectList',
     detail: '/dict/detail',
     save: '/dict/save',
     update: '/dict/update',
@@ -12,6 +13,10 @@ export default api
 
 export function getList (params) {
     return request.get(api.list, { params })
+}
+
+export async function getSelectList () {
+    return request.get(api.selectList)
 }
 
 export function detail (id) {

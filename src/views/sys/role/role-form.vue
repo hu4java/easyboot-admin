@@ -145,9 +145,9 @@ export default {
       if (resp.success) {
         self.$message.success('更新成功')
       }
-      setTimeout(function () {
+      self.$nextTick(() => {
         self.submitLoading = false
-      }, 1000)
+      })
     },
     cancel () {
       this.$router.push({ name: 'RoleList' })
