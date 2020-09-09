@@ -185,7 +185,7 @@ export default {
     const id = this.$route.query.id
     if (id) {
       this.isEdit = true
-      const menuData = await MenuApi.getMenuById(id)
+      const menuData = await MenuApi.detail(id)
       if (menuData.success) {
         this.form = menuData.data
       }

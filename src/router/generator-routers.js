@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import * as loginService from '@/api/login'
+import * as LoginApi from '@/api/login'
 // eslint-disable-next-line
 import { BasicLayout, BlankLayout, PageView, RouteView } from '@/layouts'
 
@@ -17,42 +17,10 @@ const constantRouterComponents = {
   // 你需要动态引入的页面组件
   'Workplace': () => import('@/views/dashboard/Workplace'),
   'Analysis': () => import('@/views/dashboard/Analysis'),
-
-  // form
-  'BasicForm': () => import('@/views/form/basicForm'),
-  'StepForm': () => import('@/views/form/stepForm/StepForm'),
-  'AdvanceForm': () => import('@/views/form/advancedForm/AdvancedForm'),
-
-  // list
-  'TableList': () => import('@/views/list/TableList'),
-  'StandardList': () => import('@/views/list/BasicList'),
-  'CardList': () => import('@/views/list/CardList'),
-  'SearchLayout': () => import('@/views/list/search/SearchLayout'),
-  'SearchArticles': () => import('@/views/list/search/Article'),
-  'SearchProjects': () => import('@/views/list/search/Projects'),
-  'SearchApplications': () => import('@/views/list/search/Applications'),
-  'ProfileBasic': () => import('@/views/profile/basic'),
-  'ProfileAdvanced': () => import('@/views/profile/advanced/Advanced'),
-
-  // result
-  'ResultSuccess': () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
-  'ResultFail': () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
-
   // exception
   'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
   'Exception404': () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-  'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
-
-  // account
-  'AccountCenter': () => import('@/views/account/center'),
-  'AccountSettings': () => import('@/views/account/settings/Index'),
-  'BaseSettings': () => import('@/views/account/settings/BaseSetting'),
-  'SecuritySettings': () => import('@/views/account/settings/Security'),
-  'CustomSettings': () => import('@/views/account/settings/Custom'),
-  'BindingSettings': () => import('@/views/account/settings/Binding'),
-  'NotificationSettings': () => import('@/views/account/settings/Notification')
-
-  // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')
+  'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -78,15 +46,14 @@ const rootRouter = {
  * @param token
  * @returns {Promise<Router>}
  */
-export const generatorDynamicRouter = (token) => {
+export const generatorDynamicRouter = () => {
   return new Promise((resolve, reject) => {
-    loginService.getCurrentUserNav(token).then(res => {
-      console.log('res', res)
-      const { result } = res
+    LoginApi.getCurrentUserNav().then(res => {
+      const { data } = res
       const menuNav = []
       const childrenNav = []
       //      后端数据, 根级树数组,  根级 PID
-      listToTree(result, childrenNav, 0)
+      listToTree(data, childrenNav, 0)
       rootRouter.children = childrenNav
       menuNav.push(rootRouter)
       console.log('menuNav', menuNav)
@@ -109,34 +76,28 @@ export const generatorDynamicRouter = (token) => {
  */
 export const generator = (routerMap, parent) => {
   return routerMap.map(item => {
-    const { title, show, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
+    const { title, icon } = item.meta || {}
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
-      path: item.path || `${parent && parent.path || ''}/${item.key}`,
+      path: item.path,
       // 路由名称，建议唯一
-      name: item.name || item.key || '',
+      name: item.routeName || item.key || '',
       // 该路由对应页面的 组件 :方案1
-      // component: constantRouterComponents[item.component || item.key],
+      component: constantRouterComponents[item.component],
       // 该路由对应页面的 组件 :方案2 (动态加载)
-      component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
+      // component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
 
+      hidden: item.hidden,
+      hideChildrenInMenu: item.hideChildrenInMenu,
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
         title: title,
-        icon: icon || undefined,
-        hiddenHeaderContent: hiddenHeaderContent,
-        target: target,
-        permission: item.name
+        icon: icon || (icon || undefined),
+        permission: item.code,
+        hidden: item.hidden
       }
     }
-    // 是否设置了隐藏菜单
-    if (show === false) {
-      currentRouter.hidden = true
-    }
-    // 是否设置了隐藏子菜单
-    if (hideChildren) {
-      currentRouter.hideChildrenInMenu = true
-    }
+
     // 为了防止出现后端返回结果不规范，处理有可能出现拼接出两个 反斜杠
     if (!currentRouter.path.startsWith('http')) {
       currentRouter.path = currentRouter.path.replace('//', '/')

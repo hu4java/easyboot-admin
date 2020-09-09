@@ -10,4 +10,8 @@ const personnelStates = [
     { title: '被解聘', value: 9 }
 ]
 
-export { personnelStates }
+const dictType = {
+    gender: 'gender_type'
+}
+
+export { personnelStates, dictType }

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = {
     list: '/menu/list',
-    getById: '/menu/getById',
+    detail: '/menu/getById',
     save: '/menu/save',
     update: '/menu/update',
     remove: '/menu/remove'
@@ -14,8 +14,8 @@ export function getList (params) {
     return request.get(api.list, { params })
 }
 
-export function getMenuById (id) {
-    return request.get(api.getById, { params: { id: id } })
+export function detail (id) {
+    return request.get(api.detail, { params: { id: id } })
 }
 
 export function save (data) {

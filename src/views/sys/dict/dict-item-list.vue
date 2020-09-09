@@ -62,15 +62,13 @@
         <a-table-column key="remark" title="备注" data-index="remark" />
         <a-table-column key="action" title="操作" :width="180" >
           <template slot-scope="text, record">
-            <a @click="view(record)">数据项</a>
-            <a-divider type="vertical" />
             <a @click="edit(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="remove(record)">删除</a>
           </template>
         </a-table-column>
       </s-table>
-      <a-modal :visible="visible" title="新建字典" :closable="false">
+      <a-modal :visible="visible" :title="isEdit ? '更新数据项':'新建数据项'" :closable="false">
         <template v-slot:footer>
           <a-button key="back" @click="cancel">取消</a-button>
           <a-button key="submit" type="primary" v-if="isEdit" :loading="submitLoading" @click="submit">{{ submitLoading? '更新中':'更新' }}</a-button>

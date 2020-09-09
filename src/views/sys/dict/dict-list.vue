@@ -66,7 +66,7 @@
           </template>
         </a-table-column>
       </s-table>
-      <a-modal :visible="visible" title="新建字典" :closable="false">
+      <a-modal :visible="visible" :title="isEdit ? '更新字典':'新建字典'" :closable="false">
         <template v-slot:footer>
           <a-button key="back" @click="cancel">取消</a-button>
           <a-button key="submit" type="primary" v-if="isEdit" :loading="submitLoading" @click="submit">{{ submitLoading? '更新中':'更新' }}</a-button>
