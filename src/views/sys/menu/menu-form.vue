@@ -65,8 +65,8 @@
 
         <a-row v-if="form.type !== 3">
           <a-col :span="12">
-            <a-form-model-item label="路由名" prop="routerName" extra="请使用英文字母填写">
-              <a-input v-model="form.routerName"/>
+            <a-form-model-item label="路由名" prop="routeName" extra="请使用英文字母填写">
+              <a-input v-model="form.routeName"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -139,7 +139,7 @@ export default {
       form: {
         id: '',
         title: '',
-        routerName: '',
+        routeName: '',
         pid: 0,
         type: 1,
         hidden: false,
@@ -164,7 +164,7 @@ export default {
         permission: [
           { required: true, message: '请填写权限标识' }
         ],
-        routerName: [
+        routeName: [
           { required: true, message: '请填写路由名称' }
         ],
         component: [

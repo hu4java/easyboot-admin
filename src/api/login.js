@@ -4,7 +4,7 @@ const api = {
   login: '/login',
   logout: '/logout',
   info: '/user/center/info',
-  routes: '/user/antRoute'
+  routes: '/user/center/antRoute'
 }
 
 /**

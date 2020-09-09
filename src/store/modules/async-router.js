@@ -20,7 +20,7 @@ const permission = {
       return new Promise(resolve => {
         generatorDynamicRouter().then(routers => {
           commit('SET_ROUTERS', routers)
-          resolve()
+          resolve(routers)
         })
       })
     }

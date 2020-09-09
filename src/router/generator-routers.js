@@ -30,16 +30,54 @@ const notFoundRouter = {
 
 // 根级菜单
 const rootRouter = {
-  key: '',
   name: 'index',
-  path: '',
-  component: 'BasicLayout',
-  redirect: '/dashboard',
+  path: '/',
+  component: BasicLayout,
+  redirect: '/dashboard/workplace',
   meta: {
     title: '首页'
-  },
-  children: []
+  }
 }
+
+const rootChildren = [
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    redirect: '/dashboard/workplace',
+    component: RouteView,
+    meta: { title: '仪表盘', keepAlive: true, icon: 'dashboard' },
+    children: [
+      {
+        path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',
+        name: 'Analysis',
+        component: () => import('@/views/dashboard/Analysis'),
+        meta: { title: '分析页', permission: ['user'] }
+      },
+      {
+        path: '/dashboard/workplace',
+        name: 'Workplace',
+        component: () => import('@/views/dashboard/Workplace'),
+        meta: { title: '工作台' }
+      }
+    ]
+  }
+  // {
+  //   path: '/profile',
+  //   component: RouteView,
+  //   redirect: '/profile/center',
+  //   name: 'Profile',
+  //   meta: { title: '个人页', icon: 'user', keepAlive: true },
+  //   hidden: true,
+  //   children: [
+  //     {
+  //       path: '/profile/center',
+  //       name: 'Center',
+  //       component: () => import('@/views/profile/center'),
+  //       meta: { title: '个人中心', keepAlive: true }
+  //     }
+  //   ]
+  // }
+]
 
 /**
  * 动态生成菜单
@@ -50,16 +88,14 @@ export const generatorDynamicRouter = () => {
   return new Promise((resolve, reject) => {
     LoginApi.getCurrentUserNav().then(res => {
       const { data } = res
-      const menuNav = []
-      const childrenNav = []
-      //      后端数据, 根级树数组,  根级 PID
-      listToTree(data, childrenNav, 0)
-      rootRouter.children = childrenNav
-      menuNav.push(rootRouter)
-      console.log('menuNav', menuNav)
-      const routers = generator(menuNav)
+      const routers = []
+      const menus = generator(data)
+      const router = { ...rootRouter }
+      router.children = [...rootChildren]
+      router.children.push(...menus)
+      routers.push(router)
       routers.push(notFoundRouter)
-      console.log('routers', routers)
+      console.log(routers)
       resolve(routers)
     }).catch(err => {
       reject(err)
@@ -76,23 +112,26 @@ export const generatorDynamicRouter = () => {
  */
 export const generator = (routerMap, parent) => {
   return routerMap.map(item => {
-    const { title, icon } = item.meta || {}
+    const { title, icon, component } = item || {}
+    if (component.startsWith('/')) {
+      item.component = component.replace('/', '')
+    }
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path,
       // 路由名称，建议唯一
       name: item.routeName || item.key || '',
       // 该路由对应页面的 组件 :方案1
-      component: constantRouterComponents[item.component],
+      // component: constantRouterComponents[item.component],
       // 该路由对应页面的 组件 :方案2 (动态加载)
-      // component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
+      component: (constantRouterComponents[item.component || item.key]) || (() => import(`@/views/${item.component}`)),
 
       hidden: item.hidden,
       hideChildrenInMenu: item.hideChildrenInMenu,
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
         title: title,
-        icon: icon || (icon || undefined),
+        icon: icon || (icon || 'none'),
         permission: item.code,
         hidden: item.hidden
       }
@@ -110,32 +149,5 @@ export const generator = (routerMap, parent) => {
       currentRouter.children = generator(item.children, currentRouter)
     }
     return currentRouter
-  })
-}
-
-/**
- * 数组转树形结构
- * @param list 源数组
- * @param tree 树
- * @param parentId 父ID
- */
-const listToTree = (list, tree, parentId) => {
-  list.forEach(item => {
-    // 判断是否为父级菜单
-    if (item.parentId === parentId) {
-      const child = {
-        ...item,
-        key: item.key || item.name,
-        children: []
-      }
-      // 迭代 list， 找到当前菜单相符合的所有子菜单
-      listToTree(list, child.children, item.id)
-      // 删掉不存在 children 值的属性
-      if (child.children.length <= 0) {
-        delete child.children
-      }
-      // 加入到树中
-      tree.push(child)
-    }
   })
 }

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = {
     list: '/menu/list',
-    detail: '/menu/getById',
+    detail: '/menu/detail',
     save: '/menu/save',
     update: '/menu/update',
     remove: '/menu/remove'
