@@ -41,7 +41,16 @@
         <a-row>
           <a-col :span="12">
             <a-form-model-item label="图标" prop="icon">
-              <a-input v-model="form.icon"/>
+              <!-- <a-input v-model="form.icon"/> -->
+
+              <a-input-search
+                v-model="form.icon"
+                enter-button="选择图标"
+                @search="onSearchIcons"
+              >
+                <a-icon slot="prefix" v-if="svg" :component="svg" />
+                <a-icon slot="prefix" v-else :type="form.icon" />
+              </a-input-search>
             </a-form-model-item>
           </a-col>
           <a-col :span="12" v-if="form.type !== 1">
@@ -71,7 +80,12 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="组件" prop="component">
+              <a-radio-group v-model="defaultComponent">
+                <a-radio :value="true">默认</a-radio>
+                <a-radio :value="false">手动输入</a-radio>
+              </a-radio-group>
               <a-select
+                v-if="defaultComponent"
                 v-model="form.component"
                 show-search
                 placeholder="请选择"
@@ -81,6 +95,7 @@
                   {{ router.title }}
                 </a-select-option>
               </a-select>
+              <a-input v-else v-model="form.component" addon-before="@/view/" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -122,20 +137,36 @@
           <a-button style="margin-left: 10px;" @click="cancel">取消</a-button>
         </a-form-model-item>
       </a-form-model>
+      <a-modal :visible="visible" title="选择图标" :closable="false" width="55%">
+        <template v-slot:footer>
+          <a-button key="back" @click="visible = false">取消</a-button>
+          <a-button key="submit" type="primary" @click="selectDone">确定</a-button>
+
+        </template>
+        <IconSelector @change="onChangeIcon"/>
+      </a-modal>
     </a-card>
   </page-header-wrapper>
 </template>
 
 <script>
+import { IconSelector } from '@/components'
 import * as MenuApi from '@/api/system/menu'
 import routers from '@/router/router-map'
+import svgIcons from '@/core/icons'
 
 export default {
   name: 'MenuForm',
+  components: { IconSelector },
   data () {
     return {
       isEdit: false,
+      visible: false,
       submitLoading: false,
+      defaultComponent: true,
+      svg: null,
+      selectIcon: '',
+      svgIcons,
       form: {
         id: '',
         title: '',
@@ -143,7 +174,7 @@ export default {
         pid: 0,
         type: 1,
         hidden: false,
-        icon: '',
+        icon: 'none',
         code: '',
         path: '',
         redirect: '',
@@ -176,7 +207,7 @@ export default {
       }
     }
   },
-  async created () {
+  created () {
     const pid = this.$route.query.pid
     if (pid) {
       this.form.pid = pid
@@ -185,10 +216,7 @@ export default {
     const id = this.$route.query.id
     if (id) {
       this.isEdit = true
-      const menuData = await MenuApi.detail(id)
-      if (menuData.success) {
-        this.form = menuData.data
-      }
+      this.getMenu(id)
     }
   },
   methods: {
@@ -198,6 +226,24 @@ export default {
         this.menuList = resp.data
         this.menuList.unshift({ id: '0', title: '无', pid: '0', value: '0' })
       }
+    },
+    async getMenu (id) {
+      const menuData = await MenuApi.detail(id)
+      if (menuData.success) {
+        this.form = menuData.data
+      }
+    },
+    onSearchIcons (value) {
+      this.visible = true
+      this.selectIcon = value
+    },
+    onChangeIcon (icon) {
+      this.selectIcon = icon
+    },
+    selectDone () {
+      this.visible = false
+      this.form.icon = this.selectIcon
+      this.svg = this.svgIcons[this.form.icon]
     },
     submitForm () {
       const self = this

@@ -1,6 +1,13 @@
 <template>
   <div :class="prefixCls">
     <a-tabs v-model="currentTab" @change="handleTabChange">
+      <a-tab-pane tab="业务图标" key="svg">
+        <ul>
+          <li v-for="(icon, key) in svgIcons" :key="key" :class="{ 'active': selectedIcon==key }" @click="handleSelectedIcon(key)" >
+            <a-icon :component="icon" :style="{ fontSize: '36px' }" />
+          </li>
+        </ul>
+      </a-tab-pane>
       <a-tab-pane v-for="v in icons" :tab="v.title" :key="v.key">
         <ul>
           <li v-for="(icon, key) in v.icons" :key="`${v.key}-${key}`" :class="{ 'active': selectedIcon==icon }" @click="handleSelectedIcon(icon)" >
@@ -14,6 +21,7 @@
 
 <script>
 import icons from './icons'
+import svgIcons from '@/core/icons'
 
 export default {
   name: 'IconSelect',
@@ -30,8 +38,9 @@ export default {
   data () {
     return {
       selectedIcon: this.value || '',
-      currentTab: 'directional',
-      icons
+      currentTab: 'svg',
+      icons,
+      svgIcons
     }
   },
   watch: {
