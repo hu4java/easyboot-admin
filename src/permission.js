@@ -28,7 +28,6 @@ router.beforeEach(async (to, from, next) => {
         try {
           const { roles } = await store.dispatch('GetInfo')
           const accessRoutes = await store.dispatch('GenerateRoutes', { roles })
-          console.log(accessRoutes)
           router.$addRoutes(accessRoutes)
           const redirect = decodeURIComponent(from.query.redirect || to.path)
           if (to.path === redirect) {

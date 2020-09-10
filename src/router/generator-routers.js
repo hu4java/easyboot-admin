@@ -2,6 +2,7 @@
 import * as LoginApi from '@/api/login'
 // eslint-disable-next-line
 import { BasicLayout, BlankLayout, PageView, RouteView } from '@/layouts'
+import svgIcons from '@/core/icons'
 
 // 前端路由表
 const constantRouterComponents = {
@@ -45,7 +46,7 @@ const rootChildren = [
     name: 'dashboard',
     redirect: '/dashboard/workplace',
     component: RouteView,
-    meta: { title: '仪表盘', keepAlive: true, icon: 'dashboard' },
+    meta: { title: '仪表盘', keepAlive: true, icon: svgIcons['dashboard'] },
     children: [
       {
         path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',
@@ -95,7 +96,6 @@ export const generatorDynamicRouter = () => {
       router.children.push(...menus)
       routers.push(router)
       routers.push(notFoundRouter)
-      console.log(routers)
       resolve(routers)
     }).catch(err => {
       reject(err)
@@ -131,7 +131,7 @@ export const generator = (routerMap, parent) => {
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
         title: title,
-        icon: icon || (icon || 'none'),
+        icon: svgIcons[icon] || (icon || 'none'),
         permission: item.code,
         hidden: item.hidden
       }
