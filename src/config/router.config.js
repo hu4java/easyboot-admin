@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import { UserLayout, BasicLayout, BlankLayout } from '@/layouts'
-import { bxAnaalyse } from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -22,7 +21,7 @@ export const asyncRouterMap = [
         name: 'dashboard',
         redirect: '/dashboard/workplace',
         component: RouteView,
-        meta: { title: 'menu.dashboard', keepAlive: true, icon: bxAnaalyse, permission: [ 'dashboard' ] },
+        meta: { title: 'menu.dashboard', keepAlive: true, icon: 'dashboard', permission: [ 'dashboard' ] },
         children: [
           {
             path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',

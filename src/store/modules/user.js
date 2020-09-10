@@ -10,6 +10,7 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
+    permissions: [],
     info: {}
   },
 
@@ -27,6 +28,9 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
+    },
     SET_INFO: (state, info) => {
       state.info = info
     }
@@ -37,9 +41,9 @@ const user = {
     Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         LoginApi.login(userInfo).then(response => {
-          const result = response.data
-          storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
+          const data = response.data
+          storage.set(ACCESS_TOKEN, data.token, 7 * 24 * 60 * 60 * 1000)
+          commit('SET_TOKEN', data.token)
           resolve()
         }).catch(error => {
           reject(error)
@@ -51,28 +55,22 @@ const user = {
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         LoginApi.getInfo().then(response => {
-          const result = response.data
+          const data = response.data
 
-          if (result.roles && result.roles.length > 0) {
-            const roles = result.roles
-            // role.permissions = result.role.permissions
-            // role.permissions.map(per => {
-            //   if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-            //     const action = per.actionEntitySet.map(action => { return action.action })
-            //     per.actionList = action
-            //   }
-            // })
-            // role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+          if (data.roles && data.roles.length > 0) {
+            const { roles, permissions } = data
+
             commit('SET_ROLES', roles)
-            commit('SET_INFO', result)
+            commit('SET_PERMISSIONS', permissions)
+            commit('SET_INFO', data)
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
 
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
-          commit('SET_AVATAR', result.avatar)
+          commit('SET_NAME', { name: data.name, welcome: welcome() })
+          commit('SET_AVATAR', data.avatar)
 
-          resolve(result)
+          resolve(data)
         }).catch(error => {
           reject(error)
         })
@@ -89,6 +87,7 @@ const user = {
         }).finally(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_PERMISSIONS', [])
           storage.remove(ACCESS_TOKEN)
         })
       })
@@ -98,6 +97,7 @@ const user = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_PERMISSIONS', [])
       storage.remove(ACCESS_TOKEN)
       resolve()
     })

@@ -42,7 +42,11 @@ router.beforeEach(async (to, from, next) => {
           NProgress.done()
         }
       } else {
-        next()
+        if (to.matched.length === 0) {
+          next({ path: '/404' })
+        } else {
+          next()
+        }
       }
     }
   } else {

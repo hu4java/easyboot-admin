@@ -53,7 +53,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { timeFix } from '@/utils/util'
+// import { timeFix } from '@/utils/util'
 
 export default {
   data () {
@@ -103,7 +103,6 @@ export default {
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
-          console.log('login form', values)
           const loginParams = { ...values }
           delete loginParams.username
           loginParams.username = values.username
@@ -122,25 +121,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      // check res.homePage define, set $router.push name res.homePage
-      // Why not enter onComplete
-      /*
-      this.$router.push({ name: 'analysis' }, () => {
-        console.log('onComplete')
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      })
-      */
       this.$router.push({ path: '/' })
-      // 延迟 1 秒显示欢迎信息
-      setTimeout(() => {
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      }, 1000)
       this.isLoginError = false
     },
     requestFailed (err) {

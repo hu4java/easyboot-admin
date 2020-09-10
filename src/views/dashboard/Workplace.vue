@@ -65,7 +65,7 @@
                 <a-list-item-meta>
                   <a-avatar slot="avatar" :src="item.user.avatar"/>
                   <div slot="title">
-                    <span>{{ item.user.nickname }}</span>&nbsp;
+                    <span>{{ item.user.name }}</span>&nbsp;
                     在&nbsp;<a href="#">{{ item.project.name }}</a>&nbsp;
                     <span>{{ item.project.action }}</span>&nbsp;
                     <a href="#">{{ item.project.event }}</a>
@@ -192,7 +192,7 @@ export default {
   },
   computed: {
     ...mapState({
-      nickname: (state) => state.user.nickname,
+      nickname: (state) => state.user.name,
       welcome: (state) => state.user.welcome
     }),
     currentUser () {

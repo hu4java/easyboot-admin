@@ -41,8 +41,6 @@
         <a-row>
           <a-col :span="12">
             <a-form-model-item label="图标" prop="icon">
-              <!-- <a-input v-model="form.icon"/> -->
-
               <a-input-search
                 v-model="form.icon"
                 enter-button="选择图标"
@@ -231,6 +229,7 @@ export default {
       const menuData = await MenuApi.detail(id)
       if (menuData.success) {
         this.form = menuData.data
+        this.svg = this.svgIcons[this.form.icon]
       }
     },
     onSearchIcons (value) {
@@ -273,6 +272,8 @@ export default {
           centered: true,
           onOk () {
             self.$refs.form.resetFields()
+            self.form.icon = 'none'
+            self.selectIcon = 'none'
             self.getMenuList()
           },
           onCancel () {

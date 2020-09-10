@@ -3,8 +3,8 @@ import request from '@/utils/request'
 const api = {
   login: '/login',
   logout: '/logout',
-  info: '/user/center/info',
-  routes: '/user/center/antRoute'
+  info: '/account/center/info',
+  routes: '/account/center/antRoute'
 }
 
 /**

@@ -11,17 +11,13 @@ const constantRouterComponents = {
   BlankLayout: BlankLayout,
   RouteView: RouteView,
   PageView: PageView,
-  '403': () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
-  '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
-  '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
+  '403': () => import('@/views/exception/403'),
+  '404': () => import('@/views/exception/404'),
+  '500': () => import('@/views/exception/500'),
 
   // 你需要动态引入的页面组件
   'Workplace': () => import('@/views/dashboard/Workplace'),
-  'Analysis': () => import('@/views/dashboard/Analysis'),
-  // exception
-  'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
-  'Exception404': () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-  'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
+  'Analysis': () => import('@/views/dashboard/Analysis')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -61,23 +57,23 @@ const rootChildren = [
         meta: { title: '工作台' }
       }
     ]
+  },
+  {
+    path: '/account',
+    component: RouteView,
+    redirect: '/account/center',
+    name: 'Account',
+    meta: { title: '个人页', icon: 'user', keepAlive: true },
+    hidden: true,
+    children: [
+      {
+        path: '/Account/center',
+        name: 'AccountCenter',
+        component: () => import('@/views/account/center'),
+        meta: { title: '个人中心', keepAlive: true }
+      }
+    ]
   }
-  // {
-  //   path: '/profile',
-  //   component: RouteView,
-  //   redirect: '/profile/center',
-  //   name: 'Profile',
-  //   meta: { title: '个人页', icon: 'user', keepAlive: true },
-  //   hidden: true,
-  //   children: [
-  //     {
-  //       path: '/profile/center',
-  //       name: 'Center',
-  //       component: () => import('@/views/profile/center'),
-  //       meta: { title: '个人中心', keepAlive: true }
-  //     }
-  //   ]
-  // }
 ]
 
 /**
