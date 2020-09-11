@@ -30,7 +30,7 @@ const app = {
     color: '',
     weak: false,
     multiTab: true,
-    lang: 'en-US',
+    lang: 'zh_CN',
     _antLocale: {}
   },
   mutations: {

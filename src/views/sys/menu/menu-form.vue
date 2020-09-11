@@ -172,7 +172,7 @@ export default {
         pid: 0,
         type: 1,
         hidden: false,
-        icon: 'none',
+        icon: '',
         code: '',
         path: '',
         redirect: '',
