@@ -5,6 +5,7 @@ const api = {
     detail: '/user/detail',
     save: '/user/save',
     update: '/user/update',
+    resetPassword: '/user/resetPassword',
     remove: '/user/remove'
 }
 
@@ -24,6 +25,10 @@ export function save (data) {
 
 export function update (data) {
     return request.post(api.update, data)
+}
+
+export function resetPassword (data) {
+    return request.post(api.resetPassword, data)
 }
 
 export function remove (id) {

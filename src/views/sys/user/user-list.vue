@@ -132,20 +132,24 @@
           </template>
         </a-table-column> -->
         <a-table-column key="remark" title="备注" data-index="remark" />
-        <a-table-column key="action" title="操作" :width="180" fixed="right" >
+        <a-table-column key="action" title="操作" :width="200" fixed="right" >
           <template slot-scope="text, record">
+            <a @click="reset(record)">重置密码</a>
+            <a-divider type="vertical" />
             <a @click="edit(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="remove(record)">删除</a>
           </template>
         </a-table-column>
       </s-table>
+      <reset-password ref="pwdModal"/>
     </a-card>
   </page-header-wrapper>
 </template>
 
 <script>
 import { STable } from '@/components'
+import ResetPassword from './components/ResetPassword'
 import { personnelStates } from '@/utils/const'
 import * as DeptApi from '@/api/system/dept'
 import * as RoleApi from '@/api/system/role'
@@ -153,7 +157,7 @@ import * as UserApi from '@/api/system/user'
 
 export default {
   name: 'UserList',
-  components: { STable },
+  components: { STable, ResetPassword },
   data () {
     return {
       advanced: false,
@@ -188,6 +192,9 @@ export default {
     }
   },
   methods: {
+    reset (record) {
+      this.$refs.pwdModal.show(record.id)
+    },
     add () {
       this.$router.push({ name: 'UserAdd' })
     },
