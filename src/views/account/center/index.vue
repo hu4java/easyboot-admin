@@ -5,12 +5,12 @@
         <a-card :bordered="false">
           <div class="account-center-avatarHolder">
             <div class="avatar">
-              <img :src="avatar">
+              <a-avatar :src="`${avatar}?imageView2/1/w/200/h/200`" :size="105" />
             </div>
             <div class="username">{{ userInfo.name }}</div>
-            <div class="bio">海纳百川，有容乃大</div>
+            <div class="bio">{{ userInfo.username }}</div>
           </div>
-          <div class="account-center-detail">
+          <!-- <div class="account-center-detail">
             <p>
               <i class="title"></i>交互专家
             </p>
@@ -22,8 +22,8 @@
               <span>浙江省</span>
               <span>杭州市</span>
             </p>
-          </div>
-          <a-divider/>
+          </div> -->
+          <!-- <a-divider/>
 
           <div class="account-center-tags">
             <div class="tagsTitle">标签</div>
@@ -75,20 +75,22 @@
                 </a-row>
               </div>
             </a-spin>
-          </div>
+          </div> -->
         </a-card>
       </a-col>
       <a-col :md="24" :lg="17">
         <a-card
           style="width:100%"
           :bordered="false"
-          :tabList="tabListNoTitle"
-          :activeTabKey="noTitleKey"
-          @tabChange="key => handleTabChange(key, 'noTitleKey')"
         >
-          <article-page v-if="noTitleKey === 'article'"></article-page>
-          <app-page v-else-if="noTitleKey === 'app'"></app-page>
-          <project-page v-else-if="noTitleKey === 'project'"></project-page>
+          <a-tabs default-active-key="settings" size="large">
+            <a-tab-pane key="settings" tab="基本信息">
+              <base-setting/>
+            </a-tab-pane>
+            <a-tab-pane key="security" tab="安全设置">
+              <security/>
+            </a-tab-pane>
+          </a-tabs>
         </a-card>
       </a-col>
     </a-row>
@@ -96,93 +98,29 @@
 </template>
 
 <script>
-import { PageView, RouteView } from '@/layouts'
-import { AppPage, ArticlePage, ProjectPage } from './page'
+import BaseSetting from './components/BaseSetting'
+import Security from './components/Security'
 
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    RouteView,
-    PageView,
-    AppPage,
-    ArticlePage,
-    ProjectPage
+    BaseSetting,
+    Security
   },
   data () {
     return {
-      tags: ['很有想法的', '专注设计', '辣~', '大长腿', '川妹子', '海纳百川'],
 
-      tagInputVisible: false,
-      tagInputValue: '',
-
-      teams: [],
-      teamSpinning: true,
-
-      tabListNoTitle: [
-        {
-          key: 'article',
-          tab: '文章(8)'
-        },
-        {
-          key: 'app',
-          tab: '应用(8)'
-        },
-        {
-          key: 'project',
-          tab: '项目(8)'
-        }
-      ],
-      noTitleKey: 'app'
     }
   },
   computed: {
     ...mapGetters(['name', 'avatar', 'userInfo'])
   },
   mounted () {
-    this.getTeams()
+
   },
   methods: {
-    getTeams () {
-      this.$http.get('/workplace/teams').then(res => {
-        this.teams = res.result
-        this.teamSpinning = false
-      })
-    },
 
-    handleTabChange (key, type) {
-      this[type] = key
-    },
-
-    handleTagClose (removeTag) {
-      const tags = this.tags.filter(tag => tag !== removeTag)
-      this.tags = tags
-    },
-
-    showTagInput () {
-      this.tagInputVisible = true
-      this.$nextTick(() => {
-        this.$refs.tagInput.focus()
-      })
-    },
-
-    handleInputChange (e) {
-      this.tagInputValue = e.target.value
-    },
-
-    handleTagInputConfirm () {
-      const inputValue = this.tagInputValue
-      let tags = this.tags
-      if (inputValue && !tags.includes(inputValue)) {
-        tags = [...tags, inputValue]
-      }
-
-      Object.assign(this, {
-        tags,
-        tagInputVisible: false,
-        tagInputValue: ''
-      })
-    }
   }
 }
 </script>
@@ -200,15 +138,12 @@ export default {
 
     & > .avatar {
       margin: 0 auto;
-      width: 104px;
-      height: 104px;
+      width: 105px;
+      height: 105px;
       margin-bottom: 20px;
       border-radius: 50%;
+      border: 1px solid #eeeeee;
       overflow: hidden;
-      img {
-        height: 100%;
-        width: 100%;
-      }
     }
 
     .username {

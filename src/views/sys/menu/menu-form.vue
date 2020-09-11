@@ -274,6 +274,7 @@ export default {
             self.$refs.form.resetFields()
             self.form.icon = 'none'
             self.selectIcon = 'none'
+            self.svg = null
             self.getMenuList()
           },
           onCancel () {

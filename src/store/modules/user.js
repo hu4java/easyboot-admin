@@ -80,7 +80,7 @@ const user = {
     // 登出
     Logout ({ commit, state }) {
       return new Promise((resolve) => {
-        LoginApi.logout(state.token).then(() => {
+        LoginApi.logout().then(() => {
           resolve()
         }).catch(() => {
           resolve()

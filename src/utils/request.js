@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 import storage from 'store'
-import notification from 'ant-design-vue/es/notification'
+// import notification from 'ant-design-vue/es/notification'
 import { message } from 'ant-design-vue'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
@@ -18,25 +18,14 @@ const errorHandler = (error) => {
   if (error.response) {
     const data = error.response.data
     // 从 localstorage 获取 token
-    const token = storage.get(ACCESS_TOKEN)
+
     if (error.response.status === 403) {
-      notification.error({
-        message: 'Forbidden',
-        description: data.message
-      })
+      message.error(data.message)
     }
-    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
-      notification.error({
-        message: 'Unauthorized',
-        description: 'Authorization verification failed'
+    if (error.response.status === 401) {
+      store.dispatch('ResetToken').then(() => {
+        window.location.reload()
       })
-      if (token) {
-        store.dispatch('Logout').then(() => {
-          setTimeout(() => {
-            window.location.reload()
-          }, 1500)
-        })
-      }
     }
   }
   return Promise.reject(error)
@@ -67,11 +56,15 @@ request.interceptors.response.use((response) => {
         window.location.reload()
       })
     } else {
-      message.error(data.message)
-    }
-  }
+      if (data.code !== 1003) {
+        message.error(data.message)
+      }
 
-  return data
+      return Promise.reject(data)
+    }
+  } else {
+    return data
+  }
 }, errorHandler)
 
 const installer = {
