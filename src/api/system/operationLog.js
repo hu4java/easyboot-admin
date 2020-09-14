@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = {
     list: '/operationLog/list',
-    detail: '/menu/detail'
+    detail: '/operationLog/detail'
 }
 
 export default api
