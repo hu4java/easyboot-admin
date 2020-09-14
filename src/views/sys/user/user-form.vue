@@ -11,7 +11,7 @@
           </div>
 
           <a-button class="avatar-upload-btn" @click="$refs.avatarCropper.show()"> 上传 </a-button>
-          <avatar-cropper ref="avatarCropper" @complete="setAvatar" />
+          <avatar-cropper ref="avatarCropper" @complete="saveAvatar" />
         </a-col>
         <a-col :span="20">
           <a-form-model
@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import { upload } from '@/utils/upload'
 import { AvatarCropper } from '@/components'
 import { validateMobile } from '@/utils/validate'
 import { personnelStates } from '@/utils/const'
@@ -211,12 +212,21 @@ export default {
     }
   },
   methods: {
-    setAvatar (url) {
-      console.log(url)
+    saveAvatar (file) {
       const self = this
-      self.$nextTick(() => {
-        self.form.avatar = url
-      })
+      const observe = {
+        next (res) {
+          console.log(res)
+        },
+        error (err) {
+          console.log(err)
+        },
+        complete (data) {
+          console.log(data)
+          self.form.avatar = data.url
+        }
+      }
+      upload(file, null, observe)
     },
     submitForm: function () {
       const self = this

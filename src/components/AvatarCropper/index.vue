@@ -143,7 +143,7 @@ export default {
       //     })
       //   }
       const self = this
-      self.$refs.cropper.getCropData((data) => {
+      self.$refs.cropper.getCropBlob((data) => {
         self.$emit('complete', data)
         self.visible = false
       })
