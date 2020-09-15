@@ -66,7 +66,7 @@ request.interceptors.response.use((response) => {
         message.error(data.message)
       }
 
-      return Promise.reject(data)
+      return data
     }
   } else {
     return data

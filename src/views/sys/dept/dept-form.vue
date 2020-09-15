@@ -151,11 +151,13 @@ export default {
     },
     async update () {
       const self = this
-      const resp = await DeptApi.update(this.form)
-      if (resp.success) {
-        self.$message.success('更新成功')
-      }
-      self.$nextTick(() => {
+      DeptApi.update(this.form).then((response) => {
+        if (response.success) {
+          self.$message.success('更新成功')
+        }
+
+        self.submitLoading = false
+      }).finally(() => {
         self.submitLoading = false
       })
     },
