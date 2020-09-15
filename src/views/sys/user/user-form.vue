@@ -6,7 +6,6 @@
       <a-row :gutter="20">
         <a-col :span="4" class="avatar-uploader">
           <div class="avatar">
-            <!-- <img :src="form.avatar"/> -->
             <a-avatar :src="form.avatar" :size="128" />
           </div>
 

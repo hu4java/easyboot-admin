@@ -5,8 +5,8 @@
         <a-form :label-col="{span: 5}" :wrapper-col="{span:18}">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="操作人">
-                <a-input v-model="query.name" allow-clear/>
+              <a-form-item label="登录账号">
+                <a-input v-model="query.account" allow-clear/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
@@ -19,19 +19,14 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="类型">
-                <a-select v-model="query.type" placeholder="请选择" allow-clear>
-                  <a-select-option value="">全部</a-select-option>
-                  <a-select-option v-for="type in typeList" :key="type.value" :value="type.value">
-                    {{ type.title }}
-                  </a-select-option>
-                </a-select>
+              <a-form-item label="登录地点">
+                <a-input v-model="query.location" allow-clear/>
               </a-form-item>
             </a-col>
           </a-row>
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="操作时间">
+              <a-form-item label="登录时间">
                 <a-range-picker @change="dateChange" style="width:100%;"/>
               </a-form-item>
             </a-col>
@@ -50,33 +45,34 @@
         :data="loadData"
         :scroll="{ x: 1500 }"
       >
-        <a-table-column key="id" title="ID" data-index="id" :width="100" fixed="left"/>
-        <a-table-column key="operateTime" title="操作时间" data-index="operateTime" :width="200" fixed="left"/>
-        <a-table-column key="description" title="描述" data-index="description" :width="200" />
-        <a-table-column key="type" title="操作类型" data-index="type" :width="150">
-          <template slot-scope="type">
-            {{ type | typeFilter }}
+        <a-table-column key="id" title="日志编号" data-index="id" :width="120" fixed="left"/>
+        <a-table-column key="loginTime" title="登录时间" data-index="loginTime" :width="200" fixed="left"/>
+        <a-table-column key="account" title="登录账号" data-index="account" :width="150" fixed="left"/>
+        <a-table-column key="ip" title="IP" data-index="ip" :width="180"/>
+        <a-table-column key="location" title="登录地址" data-index="location" :width="150">
+          <template slot-scope="location">
+            {{ location || '未知' }}
           </template>
         </a-table-column>
-        <a-table-column key="operateUser" title="操作人" data-index="operateUser" :width="180"/>
-        <a-table-column key="ip" title="IP" data-index="ip" :width="160"/>
+        <a-table-column key="browser" title="浏览器" data-index="browser" :width="150"/>
+        <a-table-column key="os" title="操作系统" data-index="os" :width="180"/>
         <a-table-column
           key="status"
           title="状态"
           data-index="status"
           :width="120"
-          align="center"
-          fixed="right">
+          align="center">
           <template slot-scope="status">
             <a-tag color="#87d068" v-if="status === 0">成功</a-tag>
             <a-tag color="#f50" v-else>失败</a-tag>
           </template>
         </a-table-column>
-        <a-table-column key="action" title="操作" :width="200" fixed="right" >
+        <a-table-column key="errorMsg" title="登录信息" data-index="errorMsg"/>
+        <!-- <a-table-column key="action" title="操作" :width="200" fixed="right" >
           <template slot-scope="text, record">
             <a @click="view(record)">查看</a>
           </template>
-        </a-table-column>
+        </a-table-column> -->
       </s-table>
     </a-card>
   </page-header-wrapper>
@@ -84,24 +80,10 @@
 
 <script>
 import { STable } from '@/components'
-import * as OperationLogApi from '@/api/system/operationLog'
+import * as LoginLogApi from '@/api/system/login-log'
 export default {
-  name: 'OperateLog',
+  name: 'LoginLog',
   components: { STable },
-  filters: {
-    typeFilter (type) {
-      switch (type) {
-      case 1:
-        return '保存'
-      case 2:
-        return '更新'
-      case 3:
-        return '删除'
-      default:
-        return '未知'
-      }
-    }
-  },
   data () {
     return {
       query: {
@@ -110,25 +92,11 @@ export default {
       },
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.query)
-        return OperationLogApi.getList(requestParameters)
+        return LoginLogApi.getList(requestParameters)
           .then(res => {
             return res.data
           })
-      },
-      typeList: [
-        { title: '保存', value: 1 },
-        { title: '更新', value: 2 },
-        { title: '删除', value: 3 }
-      ]
-    }
-  },
-  methods: {
-    view (record) {
-      this.$router.push({ name: 'OperateLogDetail', query: { id: record.id } })
-    },
-    dateChange (date, dateString) {
-      this.query.startTime = dateString[0]
-      this.query.endTime = dateString[1]
+      }
     }
   }
 }

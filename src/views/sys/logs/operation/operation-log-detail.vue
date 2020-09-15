@@ -76,7 +76,7 @@
 
 <script>
 import VueJsonPretty from 'vue-json-pretty'
-import * as OperateLogApi from '@/api/system/operationLog'
+import * as OperateLogApi from '@/api/system/operation-log'
 export default {
   name: 'OperateLogDetail',
   components: { VueJsonPretty },
