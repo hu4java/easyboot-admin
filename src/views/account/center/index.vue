@@ -5,7 +5,7 @@
         <a-card :bordered="false">
           <div class="account-center-avatarHolder">
             <div class="avatar">
-              <a-avatar :src="`${avatar}?imageView2/1/w/200/h/200`" :size="105" style="backgroundColor:#87d068" />
+              <a-avatar :src="`${avatar}?imageView2/1/w/200/h/200`" :size="105" />
             </div>
             <div class="username">{{ userInfo.name }}</div>
             <div class="bio">{{ userInfo.username }}</div>

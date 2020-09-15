@@ -27,6 +27,12 @@ const errorHandler = (error) => {
         window.location.reload()
       })
     }
+    if (error.response.status === 500) {
+      message.error('服务器内部错误，请稍后重试！')
+    }
+    if (error.response.status === 502) {
+      message.error('服务器正在开小差，请稍后重试！')
+    }
   }
   return Promise.reject(error)
 }
