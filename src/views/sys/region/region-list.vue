@@ -1,0 +1,109 @@
+<template>
+  <page-header-wrapper>
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form :label-col="{span: 5}" :wrapper-col="{span:18}">
+          <a-row :gutter="48">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="字典">
+                <a-tree-select
+                  v-model="query.pid"
+                  allowClear
+                  style="width: 100%"
+                  showSearch
+                  treeNodeFilterProp="title"
+                  :dropdown-style="{ overflow: 'auto' }"
+                  :tree-data="selectList"
+                  :replaceFields="{ key: 'id', title: 'name', value: 'id'}"
+                  placeholder="请选择"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="数据标题">
+                <a-input v-model="query.name" allow-clear/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="状态">
+                <a-select v-model="query.status" placeholder="请选择" allow-clear>
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="0">正常</a-select-option>
+                  <a-select-option value="1">禁用</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+              <a-button style="margin-left: 8px;" @click="() => this.query = {}">重置</a-button>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+      <div class="table-operator">
+        <a-button type="primary" icon="plus" @click="add">新建</a-button>
+        <a-button icon="sync" @click="$refs.table.refresh(true)">刷新</a-button>
+      </div>
+      <s-table
+        ref="table"
+        row-key="id"
+        :data="loadData"
+        :scroll="{ x: 1500 }"
+      >
+        <a-table-column key="id" title="编号" data-index="id" :width="120" fixed="left"/>
+        <a-table-column key="name" title="名称" data-index="name" :width="220" fixed="left"/>
+        <a-table-column key="code" title="代码" data-index="code" :width="180" />
+        <a-table-column key="shortName" title="简称" data-index="shortName" :width="100" />
+        <a-table-column key="level" title="等级" data-index="level" :width="100"/>
+        <a-table-column key="firstLetter" title="首字母" data-index="firstLetter" :width="100"/>
+        <a-table-column key="mergerName" title="合称" data-index="mergerName" />
+        <a-table-column key="action" title="操作" :width="180" fixed="right" >
+          <template slot-scope="text, record">
+            <a @click="edit(record)">编辑</a>
+            <a-divider type="vertical" />
+            <a @click="remove(record)">删除</a>
+          </template>
+        </a-table-column>
+      </s-table>
+    </a-card>
+  </page-header-wrapper>
+</template>
+
+<script>
+import { STable } from '@/components'
+import * as RegionApi from '@/api/system/region'
+export default {
+  name: 'RegionList',
+  components: { STable },
+  data () {
+    return {
+      query: {},
+      loadData: parameter => {
+        const requestParameters = Object.assign({}, parameter, this.query)
+        return RegionApi.getList(requestParameters).then(response => {
+          return response.data
+        })
+      },
+      selectList: []
+    }
+  },
+  mounted () {
+    this.getSelectList()
+  },
+  methods: {
+    getSelectList () {
+      RegionApi.getSelectList().then(response => {
+        if (response.success) {
+          this.selectList = response.data
+        }
+      })
+    },
+    add () {
+
+    },
+    edit (record) {
+
+    }
+  }
+}
+</script>

@@ -109,7 +109,7 @@
 <script>
 import { STable } from '@/components'
 import * as DictApi from '@/api/system/dict'
-import * as DictItemApi from '@/api/system/dictItem'
+import * as DictItemApi from '@/api/system/dict-item'
 
 export default {
   name: 'DictItemList',
