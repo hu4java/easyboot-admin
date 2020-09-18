@@ -98,6 +98,12 @@ export default {
           })
       }
     }
+  },
+  methods: {
+    dateChange (date, dateString) {
+      this.query.startTime = dateString[0]
+      this.query.endTime = dateString[1]
+    }
   }
 }
 </script>

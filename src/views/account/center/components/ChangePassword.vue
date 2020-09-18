@@ -72,7 +72,10 @@ export default {
           return
         }
         self.confirmLoading = true
-        ManageApi.changePassword(self.form).then(() => {
+        ManageApi.changePassword(self.form).then((response) => {
+          if (!response.success) {
+            return
+          }
           self.cancel()
           self.$warning({
             title: '提示',

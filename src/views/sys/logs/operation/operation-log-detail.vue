@@ -5,6 +5,15 @@
       <a-divider />
       <a-spin size="large" :spinning="loading">
         <a-descriptions :title="`日志编号-${log.id}`" bordered>
+          <a-descriptions-item label="操作人">
+            {{ log.operateUser }}
+          </a-descriptions-item>
+          <a-descriptions-item label="操作人ID">
+            {{ log.operateUserId }}
+          </a-descriptions-item>
+          <a-descriptions-item label="浏览器">
+            {{ log.browser }}
+          </a-descriptions-item>
           <a-descriptions-item label="请求时间">
             {{ log.operateTime }}
           </a-descriptions-item>
@@ -14,23 +23,14 @@
           <a-descriptions-item label="请求方法">
             {{ log.requestMethod }}
           </a-descriptions-item>
-          <a-descriptions-item label="请求地址" :span="2">
+          <a-descriptions-item label="请求地址" :span="3">
             {{ log.requestUrl }}
+          </a-descriptions-item>
+          <a-descriptions-item label="执行方法" :span="2">
+            {{ log.method }}
           </a-descriptions-item>
           <a-descriptions-item label="耗时(ms)">
             {{ log.time }}
-          </a-descriptions-item>
-          <a-descriptions-item label="执行方法" :span="3">
-            {{ log.method }}
-          </a-descriptions-item>
-          <a-descriptions-item label="操作人">
-            {{ log.operateUser }}
-          </a-descriptions-item>
-          <a-descriptions-item label="操作人ID">
-            {{ log.operateUserId }}
-          </a-descriptions-item>
-          <a-descriptions-item label="浏览器">
-            {{ log.browser }}
           </a-descriptions-item>
           <a-descriptions-item label="描述">
             {{ log.description }}
