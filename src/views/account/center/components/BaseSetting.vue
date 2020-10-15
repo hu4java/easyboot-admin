@@ -94,8 +94,10 @@ export default {
           return
         }
         self.submitLoading = true
-        ManageApi.update(self.form).then(() => {
-          self.$message.success('更新成功')
+        ManageApi.update(self.form).then((data) => {
+          if (data.success) {
+            self.$message.success('更新成功')
+          }
         }).catch(err => {
           console.log(err)
         }).finally(() => {
