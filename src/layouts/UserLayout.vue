@@ -3,9 +3,9 @@
     <div class="container">
       <div class="top">
         <div class="header">
-          <a href="/">
+          <a href="javascript:;">
             <img src="~@/assets/logo.svg" class="logo" alt="logo">
-            <span class="title">EasyBoot Admin</span>
+            <span class="title">Easy Admin</span>
           </a>
         </div>
         <div class="desc">
@@ -21,7 +21,7 @@
           <a href="_self">条款</a>
         </div>
         <div class="copyright">
-          Copyright &copy; {{ year }} EasyBoot Admin
+          Copyright &copy; {{ year }} Huuu
         </div>
       </div>
     </div>
