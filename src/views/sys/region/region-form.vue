@@ -82,7 +82,6 @@ export default {
   data () {
     return {
       isEdit: false,
-      visible: false,
       submitLoading: false,
       form: {
         id: '',
@@ -115,13 +114,12 @@ export default {
     }
   },
   methods: {
-    getRegionList () {
-      RegionApi.getSelectList().then(data => {
-        if (data.success) {
-          this.regionList = data.data
-          this.regionList.unshift({ id: '0', name: '无', pid: '0', value: '0' })
-        }
-      })
+    async getRegionList () {
+      const data = await RegionApi.getSelectList()
+      if (data.success) {
+        this.regionList = data.data
+        this.regionList.unshift({ id: '0', name: '无', pid: '0', value: '0' })
+      }
     },
     async getRegion (id) {
       const data = await RegionApi.detail(id)

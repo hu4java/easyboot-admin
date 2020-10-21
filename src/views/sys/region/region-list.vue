@@ -5,31 +5,17 @@
         <a-form :label-col="{span: 5}" :wrapper-col="{span:18}">
           <a-row :gutter="48">
             <a-col :md="6" :sm="24">
-              <a-form-item label="字典">
-                <a-tree-select
-                  v-model="query.pid"
-                  allowClear
-                  style="width: 100%"
-                  showSearch
-                  treeNodeFilterProp="title"
-                  :dropdown-style="{ overflow: 'auto' }"
-                  :tree-data="selectList"
-                  :replaceFields="{ key: 'id', title: 'name', value: 'id'}"
-                  placeholder="请选择"
-                />
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="数据标题">
+              <a-form-item label="名称">
                 <a-input v-model="query.name" allow-clear/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
-              <a-form-item label="状态">
+              <a-form-item label="等级">
                 <a-select v-model="query.status" placeholder="请选择" allow-clear>
                   <a-select-option value="">全部</a-select-option>
-                  <a-select-option value="0">正常</a-select-option>
-                  <a-select-option value="1">禁用</a-select-option>
+                  <a-select-option value="1">省</a-select-option>
+                  <a-select-option value="2">市</a-select-option>
+                  <a-select-option value="3">区/县</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -54,7 +40,11 @@
         <a-table-column key="name" title="名称" data-index="name" :width="220" fixed="left"/>
         <a-table-column key="code" title="代码" data-index="code" :width="180" />
         <a-table-column key="shortName" title="简称" data-index="shortName" :width="100" />
-        <a-table-column key="level" title="等级" data-index="level" :width="100"/>
+        <a-table-column key="level" title="等级" data-index="level" :width="100">
+          <template slot-scope="text">
+            {{text|levelFilter}}
+          </template>
+        </a-table-column>
         <a-table-column key="firstLetter" title="首字母" data-index="firstLetter" :width="100"/>
         <a-table-column key="mergerName" title="合称" data-index="mergerName" />
         <a-table-column key="action" title="操作" :width="180" fixed="right" >
@@ -75,6 +65,20 @@ import * as RegionApi from '@/api/system/region'
 export default {
   name: 'RegionList',
   components: { STable },
+  filters: {
+    levelFilter (val) {
+      switch (val) {
+        case 1:
+          return '省'
+        case 2:
+          return '市'
+        case 3:
+          return '区/县'
+        default:
+          return ''
+      }
+    }
+  },
   data () {
     return {
       query: {},

@@ -34,6 +34,7 @@
         :pagination="false"
       >
         <a-table-column key="title" title="标题" data-index="title" :width="220" fixed="left" />
+        <a-table-column key="routeName" title="路由名" data-index="routeName" :width="150"/>
         <a-table-column key="code" title="授权码" data-index="code" :width="200"/>
         <a-table-column key="orderNum" title="排序" data-index="orderNum" :width="80" />
         <a-table-column key="type" title="类型" data-index="type" align="center" :width="120">
