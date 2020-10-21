@@ -78,12 +78,12 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="组件" prop="component">
-              <a-radio-group v-model="defaultComponent">
+              <a-radio-group v-model="form.defaultComponent">
                 <a-radio :value="true">默认</a-radio>
                 <a-radio :value="false">手动输入</a-radio>
               </a-radio-group>
               <a-select
-                v-if="defaultComponent"
+                v-if="form.defaultComponent"
                 v-model="form.component"
                 show-search
                 placeholder="请选择"
@@ -179,7 +179,8 @@ export default {
         component: '',
         status: 0,
         orderNum: 1,
-        hideChildrenInMenu: false
+        hideChildrenInMenu: false,
+        defaultComponent: true
       },
       menuList: [],
       routers,

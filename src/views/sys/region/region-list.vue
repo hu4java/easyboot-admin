@@ -99,10 +99,10 @@ export default {
       })
     },
     add () {
-
+      this.$router.push({ name: 'RegionAdd' })
     },
     edit (record) {
-
+      this.$router.push({ name: 'RegionEdit', query: { id: record.id } })
     }
   }
 }
